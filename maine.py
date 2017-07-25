@@ -1,18 +1,47 @@
+import requests
 import telebot
 import os
 from flask import Flask, request
 
 bot = telebot.TeleBot('426351504:AAHomR1jc-m2B7iabRnOFR8OkPTKlkWMIdw')
-
-server = Flask(__name__)
+weath_token = "795819f679706a61cd7938b26ac247af"
+city_id=703448
 
 @bot.message_handler(commands=['start'])
 def start(message):
     bot.reply_to(message, 'Hello, ' + message.from_user.first_name)
 
-@bot.message_handler(func=lambda message: True, content_types=['text'])
-def echo_message(message):
-    bot.reply_to(message, message.text)
+@bot.message_handler(commands=['weather'])
+def weather(message):
+    try:
+        res=requests.get("http://api.openweathermap.org/data/2.5/weather",
+            params={'id':city_id,'units':'metric', 'lang':'ru', 'APPID':weath_token})
+        data=res.json()
+        bot.send_message(message.chat.id,"Погода: "+data['weather'][0]['description'])
+        bot.send_message(message.chat.id,"Температура: "+data['main']['temp'])
+    except:
+        print('Dead end.')
+        pass
+
+@bot.message_handler(commands=['forecast'])
+def forecast(message):
+    try:
+        res=requests.get("http://api.openweathermap.org/data/2.5/forecast",
+            params={'id': city_id, 'units': 'metric', 'lang': 'ru', 'APPID': weath_token})
+        data=res.json()
+        for i in data['list']:
+            co=i['dt_txt']+'{0:+3.0f}'.format(i['main']['temp'])+i['weather'][0]['description']
+            bot.send_message(message.chat.id,co)
+    except Exception as e:
+        print('Exception', e)
+        pass
+
+
+
+
+
+
+server = Flask(__name__)
 
 @server.route("/bot", methods=['POST'])
 def getMessage():
@@ -26,5 +55,3 @@ def webhook():
     return "!", 200
 
 server.run(host="0.0.0.0", port=os.environ.get('PORT', 5000))
-
-
