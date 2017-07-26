@@ -5,7 +5,6 @@ from flask import Flask, request
 
 bot = telebot.TeleBot('426351504:AAHomR1jc-m2B7iabRnOFR8OkPTKlkWMIdw')
 weath_token = "795819f679706a61cd7938b26ac247af"
-city_id=703448
 
 # if os.environ.get('DATABASE_URL') is None: ## For DB
 
@@ -15,15 +14,18 @@ def start(message):
 
 @bot.message_handler(commands=['weather'])
 def weather(message):
-    city=message.text.split(" ")
     try:
+        city=message.text.split(" ")
         if city[-1]!="/weather" and len(city[-1])!=0:
-            res=requests.get("http://api.openweathermap.org/data/2.5/weather", params={"q":city[1],'units':'metric', 'lang':'ru', "APPID":weath_token})
+            res=requests.get("http://api.openweathermap.org/data/2.5/weather", 
+                params={"q":city[1],'units':'metric', 'lang':'ru', "APPID":weath_token})
         else:    
-            res=requests.get("http://api.openweathermap.org/data/2.5/weather", params={'id':city_id,'units':'metric', 'lang':'ru', 'APPID':weath_token})
+            bot.send_message(message.chat.id, "Укажите город, для которого выполняется поиск.")
         data=res.json()
         mess="Погода: "+data['weather'][0]['description']+"\n"
-        mess+="Температура: "+'{0:+3.0f}'.format(data['main']['temp'])
+        mess+="Температура: "+"%f"%data['main']['temp']+"\n"
+        mess+="Влажность: "+"%f"%data["main"]["humidity"]+"\n"
+        mess+="Скорость ветра: "+"%f"%data["wind"]["speed"]
         bot.send_message(message.chat.id,mess)
     except Exception as e:
         print('Exception', e)
