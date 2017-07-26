@@ -17,7 +17,7 @@ def start(message):
 def weather(message):
     city=message.text.split(" ")
     try:
-        if len(city[1])!=0:
+        if city[-1]!="/weather" and len(city[-1])!=0:
             res=requests.get("http://api.openweathermap.org/data/2.5/weather", params={"q":city[1],'units':'metric', 'lang':'ru', "APPID":weath_token})
         else:    
             res=requests.get("http://api.openweathermap.org/data/2.5/weather", params={'id':city_id,'units':'metric', 'lang':'ru', 'APPID':weath_token})
