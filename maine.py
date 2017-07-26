@@ -22,8 +22,9 @@ def weather(message):
         else:    
             res=requests.get("http://api.openweathermap.org/data/2.5/weather", params={'id':city_id,'units':'metric', 'lang':'ru', 'APPID':weath_token})
         data=res.json()
-        bot.send_message(message.chat.id,"Погода: "+data['weather'][0]['description'])
-        bot.send_message(message.chat.id,"Температура: "+'{0:+3.0f}'.format(data['main']['temp']))
+        mess="Погода: "+data['weather'][0]['description']+"\n"
+        mess+="Температура: "+'{0:+3.0f}'.format(data['main']['temp'])
+        bot.send_message(message.chat.id,mess)
     except Exception as e:
         print('Exception', e)
         pass
