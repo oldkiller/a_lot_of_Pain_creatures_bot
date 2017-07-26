@@ -13,6 +13,7 @@ def start(message):
 
 @bot.message_handler(commands=['weather'])
 def weather(message):
+    print(message)
     try:
         res=requests.get("http://api.openweathermap.org/data/2.5/weather",
             params={'id':city_id,'units':'metric', 'lang':'ru', 'APPID':weath_token})
