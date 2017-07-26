@@ -7,21 +7,22 @@ bot = telebot.TeleBot('426351504:AAHomR1jc-m2B7iabRnOFR8OkPTKlkWMIdw')
 weath_token = "795819f679706a61cd7938b26ac247af"
 city_id=703448
 
+# if os.environ.get('DATABASE_URL') is None: ## For DB
+
 @bot.message_handler(commands=['start'])
 def start(message):
     bot.reply_to(message, 'Hello, ' + message.from_user.first_name)
 
 @bot.message_handler(commands=['weather'])
 def weather(message):
-    bot.send_message(message.chat.id,message.text.swapcase())
     try:
         res=requests.get("http://api.openweathermap.org/data/2.5/weather",
             params={'id':city_id,'units':'metric', 'lang':'ru', 'APPID':weath_token})
         data=res.json()
         bot.send_message(message.chat.id,"Погода: "+data['weather'][0]['description'])
         bot.send_message(message.chat.id,"Температура: "+data['main']['temp'])
-    except:
-        print('Dead end.')
+    except Exception as e:
+        print('Exception', e)
         pass
 
 @bot.message_handler(commands=['forecast'])
