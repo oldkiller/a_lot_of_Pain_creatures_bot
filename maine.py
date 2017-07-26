@@ -15,15 +15,19 @@ def start(message):
 
 @bot.message_handler(commands=['weather'])
 def weather(message):
+    city=message.text.split(" ")
     try:
-        res=requests.get("http://api.openweathermap.org/data/2.5/weather",
-            params={'id':city_id,'units':'metric', 'lang':'ru', 'APPID':weath_token})
+        if len(city[1])!=0:
+            res=requests.get("http://api.openweathermap.org/data/2.5/weather", params={"q":city[1],'units':'metric', 'lang':'ru', "APPID":weath_token})
+        else:    
+            res=requests.get("http://api.openweathermap.org/data/2.5/weather", params={'id':city_id,'units':'metric', 'lang':'ru', 'APPID':weath_token})
         data=res.json()
         bot.send_message(message.chat.id,"Погода: "+data['weather'][0]['description'])
-        bot.send_message(message.chat.id,"Температура: "+data['main']['temp'])
+        bot.send_message(message.chat.id,"Температура: "+'{0:+3.0f}'.format(i['main']['temp']))
     except Exception as e:
         print('Exception', e)
         pass
+
 
 @bot.message_handler(commands=['forecast'])
 def forecast(message):
