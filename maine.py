@@ -34,7 +34,7 @@ def weath_mess_form(data, mess=""):
     def tostr(i):
         return "{0:+3.0f}".format(i)
     mess+= data['weather'][0]['description']+", "
-    mess+= mess[0].upper()+mess[1:]
+    mess= mess[0].upper()+mess[1:]
     mess+= tostr(data["main"]["temp"])+"°C, "
     mess+= "влажность: "+tostr(data["main"]["humidity"])+"%, "
     mess+= "cкорость ветра: "+tostr(data["wind"]["speed"])+"м/с, "
@@ -52,8 +52,7 @@ def forecast(message):
     data = weath_req("forecast", message)
     for i in data["list"]:
         if i["dt_txt"][11:13]=="12" or i["dt_txt"][11:13]=="00":
-            mess=i["dt_txt"]+"\n"
-            mess=weath_mess_form(i, mess)
+            mess=i["dt_txt"]+"\n" + weath_mess_form(i)
             bot.send_message(message.chat.id, mess)
 
 ###############################################################################
