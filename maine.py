@@ -7,10 +7,10 @@ bot = telebot.TeleBot('426351504:AAHomR1jc-m2B7iabRnOFR8OkPTKlkWMIdw')
 weath_token = "795819f679706a61cd7938b26ac247af"
 
 @bot.message_handler(commands=['start'])
-def start(message):
-    bot.reply_to(message, 'Hello, ' + message.from_user.first_name)
+def start(message): bot.reply_to(message, 'Hello, ' + message.from_user.first_name)
 
-###############################################################################
+
+################## Block responsible for weather requests #####################
 def weath_req(types, message):
     try:
         city=message.text.split(" ")
@@ -26,11 +26,6 @@ def weath_req(types, message):
         pass
 
 def weath_mess_form(data, mess=""):
-    # '{0:+3.0f}'.format(i['main']['temp'])  "°C"
-    # mess+="Погода: "+data['weather'][0]['description']+"\n"
-    # mess+="Температура: "+"%f"%round(data['main']['temp'],2)+"\n"
-    # mess+="Влажность: "+"%f"%round(data["main"]["humidity"],2)+"\n"
-    # mess+="Скорость ветра: "+"%f"%round(data["wind"]["speed"],2)
     def tostr(i):
         return "{0:+3.0f}".format(i)
     mess+= data['weather'][0]['description']+", "
@@ -55,7 +50,8 @@ def forecast(message):
             mess=i["dt_txt"]+"\n" + weath_mess_form(i)
             bot.send_message(message.chat.id, mess)
 
-###############################################################################
+
+####################### Block responsible for webhooks ########################
 server = Flask(__name__)
 
 @server.route("/bot", methods=['POST'])
