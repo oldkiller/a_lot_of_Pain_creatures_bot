@@ -12,66 +12,49 @@ def start(message):
 
 ###############################################################################
 def weath_req(types, message):
-    city=message.text.split(" ")
-    if city[-1]!="/"+types and len(city[-1])!=0:
-        res=requests.get(f"http://api.openweathermap.org/data/2.5/{types}", 
-                    params={"q":city[1],'units':'metric', 'lang':'ru', "APPID":weath_token})
-    else:    
-        bot.send_message(message.chat.id, "Укажите город, для которого выполняется поиск.")
-    data = res.json()
-    return data
+    try:
+        city=message.text.split(" ")
+        if city[-1]!="/"+types and len(city[-1])!=0:
+            res=requests.get(f"http://api.openweathermap.org/data/2.5/{types}", 
+                        params={"q":city[1],'units':'metric', 'lang':'ru', "APPID":weath_token})
+        else:    
+            bot.send_message(message.chat.id, "Укажите город, для которого выполняется поиск.")
+        data = res.json()
+        return data
+    except Exception as e:
+        print('Exception', e)
+        pass
 
-def weath_mess_form(data, mess=""):
-    mess+="Погода: "+data['weather'][0]['description']+"\n"
-    mess+="Температура: "+"%f"%round(data['main']['temp'],2)+"\n"
-    mess+="Влажность: "+"%f"%round(data["main"]["humidity"],2)+"\n"
-    mess+="Скорость ветра: "+"%f"%round(data["wind"]["speed"],2)
+def weath_mess_form(data, mess=""): °C
+    # '{0:+3.0f}'.format(i['main']['temp'])  "°C"
+    # mess+="Погода: "+data['weather'][0]['description']+"\n"
+    # mess+="Температура: "+"%f"%round(data['main']['temp'],2)+"\n"
+    # mess+="Влажность: "+"%f"%round(data["main"]["humidity"],2)+"\n"
+    # mess+="Скорость ветра: "+"%f"%round(data["wind"]["speed"],2)
+    def tostr(i):
+        return "{0:+3.0f}".format(i)
+    mess+= data['weather'][0]['description']+", "
+    mess+= mess[0].upper()+mess[1:]
+    mess+= tostr(data["main"]["temp"])+"°C, "
+    mess+= "влажность: "+tostr(data["main"]["humidity"])+"%, "
+    mess+= "cкорость ветра: "+tostr(data["wind"]["speed"])+"м/с, "
+    mess+= "облачность: "+tostr(data["clouds"]["all"])+"%"
     return mess
 
 @bot.message_handler(commands=['weather'])
 def weather(message):
-    try:
-        # city=message.text.split(" ")
-        # if city[-1]!="/weather" and len(city[-1])!=0:
-        #     res=requests.get("http://api.openweathermap.org/data/2.5/weather", 
-        #         params={"q":city[1],'units':'metric', 'lang':'ru', "APPID":weath_token})
-        # else:    
-        #     bot.send_message(message.chat.id, "Укажите город, для которого выполняется поиск.")
-        # data=res.json()
-        data = weath_req("weather", message)
-        # mess="Погода: "+data['weather'][0]['description']+"\n"
-        # mess+="Температура: "+"%f"%round(data['main']['temp'],2)+"\n"
-        # mess+="Влажность: "+"%f"%round(data["main"]["humidity"],2)+"\n"
-        # mess+="Скорость ветра: "+"%f"%round(data["wind"]["speed"],2)
-        mess = weath_mess_form(data)
-        bot.send_message(message.chat.id,mess)
-    except Exception as e:
-        print('Exception', e)
-        pass
-
+    data = weath_req("weather", message)
+    mess = weath_mess_form(data)
+    bot.send_message(message.chat.id,mess)
 
 @bot.message_handler(commands=['forecast'])
 def forecast(message):
-    try:
-        # res=requests.get("http://api.openweathermap.org/data/2.5/forecast",
-        #     params={'id': city_id, 'units': 'metric', 'lang': 'ru', 'APPID': weath_token})
-        # data=res.json()
-        # for i in data['list']:
-        #     co=i['dt_txt']+'{0:+3.0f}'.format(i['main']['temp'])+i['weather'][0]['description']
-        #     bot.send_message(message.chat.id,co)
-        data = weath_req("forecast", message)
-        for i in data["list"]:
-            if i["dt_txt"][11:13]=="12" or i["dt_txt"][11:13]=="00":
-                mess=i["dt_txt"]+"\n"
-                mess=weath_mess_form(i, mess)
-                bot.send_message(message.chat.id, mess)
-    except Exception as e:
-        print('Exception', e)
-        pass
-
-
-
-
+    data = weath_req("forecast", message)
+    for i in data["list"]:
+        if i["dt_txt"][11:13]=="12" or i["dt_txt"][11:13]=="00":
+            mess=i["dt_txt"]+"\n"
+            mess=weath_mess_form(i, mess)
+            bot.send_message(message.chat.id, mess)
 
 ###############################################################################
 server = Flask(__name__)
