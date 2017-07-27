@@ -25,7 +25,7 @@ def weath_req(types, message):
         print('Exception', e)
         pass
 
-def weath_mess_form(data, mess=""): °C
+def weath_mess_form(data, mess=""):
     # '{0:+3.0f}'.format(i['main']['temp'])  "°C"
     # mess+="Погода: "+data['weather'][0]['description']+"\n"
     # mess+="Температура: "+"%f"%round(data['main']['temp'],2)+"\n"
