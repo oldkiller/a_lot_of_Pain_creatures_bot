@@ -1,14 +1,16 @@
 import requests
 import telebot
+import pybooru
 import os
 from flask import Flask, request
 
 bot = telebot.TeleBot('426351504:AAHomR1jc-m2B7iabRnOFR8OkPTKlkWMIdw')
 weath_token = "795819f679706a61cd7938b26ac247af"
+yan_api = "r5oUMfysc4C566kI312u_A"
 
 @bot.message_handler(commands=['start'])
-def start(message): bot.reply_to(message, 'Hello, ' + message.from_user.first_name)
-
+def start(message):
+    bot.reply_to(message, 'Hello, ' + message.from_user.first_name)
 
 ################## Block responsible for weather requests #####################
 def weath_req(types, message):
@@ -50,6 +52,15 @@ def forecast(message):
             mess=i["dt_txt"]+"\n" + weath_mess_form(i)
             bot.send_message(message.chat.id, mess)
 
+####################### Block responsible for pictures ########################
+@bot.message_handler(commands=["yandere"])
+def yandere(message):
+    yander=pybooru.Moebooru("yandere", hash_string=yan_api)
+    p_list=yander.post_list(tags="loli", limit=5)
+    for post in p_list:
+        bot.send_message(message.chat.id, post["file_url"])
+
+####################### Block responsible for music    ########################
 
 ####################### Block responsible for webhooks ########################
 server = Flask(__name__)
