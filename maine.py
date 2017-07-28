@@ -62,7 +62,7 @@ def yandere(message):
     p_list=yander.post_list(tags="loli", limit=15)
     for post in p_list:
         time.sleep(1)
-        bot.send_message(message.chat.id, post["file_url"])
+        bot.send_message(message.chat.id, post["jpeg_url"])
 
 ####################### Block responsible for music    ########################
 
