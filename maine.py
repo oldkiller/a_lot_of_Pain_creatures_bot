@@ -5,10 +5,11 @@ import time
 import os
 from flask import Flask, request
 
-bot = telebot.TeleBot('426351504:AAHomR1jc-m2B7iabRnOFR8OkPTKlkWMIdw')
-tele_api
+tele_api = "426351504:AAHomR1jc-m2B7iabRnOFR8OkPTKlkWMIdw"
 weath_token = "795819f679706a61cd7938b26ac247af"
 yan_api = "r5oUMfysc4C566kI312u_A"
+
+bot = telebot.TeleBot(tele_api)
 
 @bot.message_handler(commands=['start'])
 def start(message):
