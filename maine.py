@@ -2,6 +2,7 @@ import requests
 import telebot
 import pybooru
 import os
+from urllib.request import urlopen
 from flask import Flask, request
 
 tele_api = "426351504:AAHomR1jc-m2B7iabRnOFR8OkPTKlkWMIdw"
@@ -64,8 +65,8 @@ def yandere(message):
         p_list=yander.post_list(tags=tag, limit=lim)
         for post in p_list:
             bot.send_message(message.chat.id, post["sample_url"])
-            bot.send_document(message.chat.id, post["sample_url"])
-            bot.send_photo(message.chat.id, post["sample_url"])
+            bot.send_document(message.chat.id, urlopen(post["sample_url"]))
+            bot.send_photo(message.chat.id, urlopen(post["sample_url"]))
     except Exception as e:
         print('Exception', e)
 
