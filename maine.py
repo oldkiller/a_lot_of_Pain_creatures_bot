@@ -52,7 +52,7 @@ def forecast(message):
     data = weath_req("forecast", message)
     for i in data["list"]:
         if i["dt_txt"][11:13]=="12" or i["dt_txt"][11:13]=="00":
-            mess=i["dt_txt"]+"\n" + weath_mess_form(i)
+            mess=i["dt_txt"]+" : "+weath_mess_form(i)
             bot.send_message(message.chat.id, mess)
 
 ####################### Block responsible for pictures ########################
@@ -62,7 +62,7 @@ def yandere(message):
     p_list=yander.post_list(tags="loli", limit=5)
     for post in p_list:
         time.sleep(1)
-        bot.send_message(message.chat.id, post["file_url"])
+        bot.send_photo(message.chat.id, post["file_url"])
 
 ####################### Block responsible for music    ########################
 
