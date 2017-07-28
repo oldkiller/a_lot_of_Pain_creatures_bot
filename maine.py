@@ -1,7 +1,6 @@
 import requests
 import telebot
 import pybooru
-import time
 import os
 from flask import Flask, request
 
@@ -28,7 +27,6 @@ def weath_req(types, message):
         return data
     except Exception as e:
         print('Exception', e)
-        pass
 
 def weath_mess_form(data, mess=""):
     def tostr(i):
@@ -58,11 +56,16 @@ def forecast(message):
 ####################### Block responsible for pictures ########################
 @bot.message_handler(commands=["yandere"])
 def yandere(message):
-    yander=pybooru.Moebooru("yandere", hash_string=yan_api)
-    p_list=yander.post_list(tags="loli", limit=10, page=1)
-    for post in p_list:
-        time.sleep(1)
-        bot.send_message(message.chat.id, post["jpeg_url"])
+    try:
+        parse_mess = message.text.split(" ")
+        tag=parse_mess[1:len(parse_mess)-1]
+        lim=int(parse_mess[-1])
+        yander=pybooru.Moebooru("yandere", hash_string=yan_api)
+        p_list=yander.post_list(tags=tag, limit=lim)
+        for post in p_list:
+            bot.send_message(message.chat.id, str(post))
+    except Exception as e:
+        print('Exception', e)
 
 ####################### Block responsible for music    ########################
 
