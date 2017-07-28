@@ -59,7 +59,7 @@ def forecast(message):
 @bot.message_handler(commands=["yandere"])
 def yandere(message):
     yander=pybooru.Moebooru("yandere", hash_string=yan_api)
-    p_list=yander.post_list(tags="loli", limit=10)
+    p_list=yander.post_list(tags="loli", limit=10, page=1)
     for post in p_list:
         time.sleep(1)
         bot.send_message(message.chat.id, post["jpeg_url"])
