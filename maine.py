@@ -58,7 +58,7 @@ def forecast(message):
 def yandere(message):
     try:
         parse_mess = message.text.split(" ")
-        tag=parse_mess[1:len(parse_mess)-1]
+        tag="_".join(parse_mess[1:len(parse_mess)-1])
         lim=int(parse_mess[-1])
         yander=pybooru.Moebooru("yandere", hash_string=yan_api)
         p_list=yander.post_list(tags=tag, limit=lim)
