@@ -63,7 +63,7 @@ def yandere(message):
         yander=pybooru.Moebooru("yandere", hash_string=yan_api)
         p_list=yander.post_list(tags=tag, limit=lim)
         for post in p_list:
-            bot.send_message(message.chat.id, str(post))
+            bot.send_message(message.chat.id, post["sample_url"])
     except Exception as e:
         print('Exception', e)
 
