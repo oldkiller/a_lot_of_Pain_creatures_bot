@@ -65,7 +65,9 @@ def yandere(message):
         p_list=yander.post_list(tags=tag, limit=lim)
         for post in p_list:
             bot.send_message(message.chat.id, post["sample_url"])
-            bot.send_document(message.chat.id, urlopen(post["file_url"]), caption="trololo")
+            file = urlopen(post["file_url"])
+            bot.send_document(message.chat.id, open(file))
+            #bot.send_document(message.chat.id, urlopen(post["file_url"]))
             bot.send_photo(message.chat.id, urlopen(post["sample_url"]))
     except Exception as e:
         print('Exception', e)
