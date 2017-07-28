@@ -1,10 +1,12 @@
 import requests
 import telebot
 import pybooru
+import time
 import os
 from flask import Flask, request
 
 bot = telebot.TeleBot('426351504:AAHomR1jc-m2B7iabRnOFR8OkPTKlkWMIdw')
+tele_api
 weath_token = "795819f679706a61cd7938b26ac247af"
 yan_api = "r5oUMfysc4C566kI312u_A"
 
@@ -58,6 +60,7 @@ def yandere(message):
     yander=pybooru.Moebooru("yandere", hash_string=yan_api)
     p_list=yander.post_list(tags="loli", limit=5)
     for post in p_list:
+        time.sleep(1)
         bot.send_message(message.chat.id, post["file_url"])
 
 ####################### Block responsible for music    ########################
