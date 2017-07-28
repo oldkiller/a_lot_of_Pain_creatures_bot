@@ -60,7 +60,7 @@ def yandere(message):
         parse_mess = message.text.split(" ")
         tag="_".join(parse_mess[1:len(parse_mess)-1])
         lim=int(parse_mess[-1])
-        yander=pybooru.Moebooru("yandere", username="Oldkiller", password="Asta10241024kk" hash_string=yan_api)
+        yander=pybooru.Moebooru("yandere", username="Oldkiller", password="Asta10241024kk", hash_string=yan_api)
         p_list=yander.post_list(tags=tag, limit=lim)
         for post in p_list:
             bot.send_message(message.chat.id, post["sample_url"])
