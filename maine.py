@@ -30,8 +30,7 @@ def weath_req(types, message):
         print('Exception', e)
 
 def weath_mess_form(data, mess=""):
-    def tostr(i):
-        return "{0:+3.0f}".format(i)
+    tostr = lambda i: "{0:+3.0f}".format(i)
     mess+= data['weather'][0]['description']+", "
     mess= mess[0].upper()+mess[1:]
     mess+= tostr(data["main"]["temp"])+"°C, "
@@ -63,9 +62,12 @@ def yandere(message):
         lim=int(parse_mess[-1])
         yander=pybooru.Moebooru("yandere", hash_string=yan_api)
         p_list=yander.post_list(tags=tag, limit=lim)
-        for post in p_list:
-            bot.send_photo(message.chat.id, urlopen(post["sample_url"]))
-            bot.send_document(message.chat.id, urlopen(post["file_url"]))
+        if p_list == []:
+            bot.send_message(message.chat.id, "Проблемный запрос")
+        else:
+            for post in p_list:
+                bot.send_photo(message.chat.id, urlopen(post["sample_url"]))
+                bot.send_document(message.chat.id, urlopen(post["file_url"]))
     except Exception as e:
         print('Exception', e)
 
