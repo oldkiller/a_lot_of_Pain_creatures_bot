@@ -69,6 +69,7 @@ def yandere(message):
                 bot.send_photo(message.chat.id, urlopen(post["sample_url"]))
                 bot.send_document(message.chat.id, urlopen(post["file_url"]))
     except Exception as e:
+        bot.send_message(message.chat.id, e)
         print('Exception', e)
 
 ####################### Block responsible for music    ########################
