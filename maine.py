@@ -2,6 +2,7 @@ import requests
 import telebot
 import pybooru
 import os
+from common_func import parse
 from urllib.request import urlopen
 from flask import Flask, request
 
@@ -27,6 +28,7 @@ def weath_req(types, message):
         data = res.json()
         return data
     except Exception as e:
+        pain(e)
         print('Exception', e)
 
 def weath_mess_form(data, mess=""):
@@ -57,22 +59,44 @@ def forecast(message):
 @bot.message_handler(commands=["yandere"])
 def yandere(message):
     try:
-        parse_mess = message.text.split(" ")
-        tag="_".join(parse_mess[1:len(parse_mess)-1])
-        lim=int(parse_mess[-1])
-        yander=pybooru.Moebooru("yandere", hash_string=yan_api)
-        p_list=yander.post_list(tags=tag, limit=lim)
-        if p_list == []:
-            bot.send_message(message.chat.id, "Проблемный запрос")
+        mess=parse(message.text, {"mess":1, "tag":0, "count":1})
+        booru=pybooru.Moebooru("yandere", hash_string=yan_api)
+        posts=booru.post_list(tags=mess["tag"], limit=int(mess["count"]))
+        if posts: 
+            bot.send_message(message.chat.id, "Пост не найден.")
         else:
-            for post in p_list:
+            for post in posts:
                 bot.send_photo(message.chat.id, urlopen(post["sample_url"]))
                 bot.send_document(message.chat.id, urlopen(post["file_url"]))
     except Exception as e:
         bot.send_message(message.chat.id, e)
-        print('Exception', e)
+    # try:
+    #     parse_mess = message.text.split(" ")
+    #     tag="_".join(parse_mess[1:len(parse_mess)-1])
+    #     lim=int(parse_mess[-1])
+    #     yander=pybooru.Moebooru("yandere", hash_string=yan_api)
+    #     p_list=yander.post_list(tags=tag, limit=lim)
+    #     if p_list == []:
+    #         bot.send_message(message.chat.id, "Проблемный запрос")
+    #     else:
+    #         for post in p_list:
+    #             bot.send_photo(message.chat.id, urlopen(post["sample_url"]))
+    #             bot.send_document(message.chat.id, urlopen(post["file_url"]))
+    # except Exception as e:
+    #     pain(e)
 
 ####################### Block responsible for music    ########################
+
+################################# Secret ######################################
+# @bot.message_handler(commands=["kpi"])
+# def kpi():
+#     try:
+#         suka=message.text.split(" ")
+#         su= 
+#         gtr="groups" if 
+#     except:
+#         bot.send_message(message.chat.id, "Проверьте правильность запроса")
+#     r=requests.get("")
 
 ####################### Block responsible for webhooks ########################
 server = Flask(__name__)
