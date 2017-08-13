@@ -60,7 +60,6 @@ def forecast(message):
 def yandere(message):
 	try:
 		mess=parse(message.text, {"mess":1, "tag":0, "count":1})
-		bot.send_message(message.chat.id, mess)
 		booru=pybooru.Moebooru("yandere", hash_string=yan_api)
 		posts=booru.post_list(tags=mess["tag"], limit=int(mess["count"]))
 		if posts==[]:
