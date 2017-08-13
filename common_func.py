@@ -23,12 +23,12 @@ def parse(m_t,bdict):
 				if resdict[obj]:
 					resdict.update({obj:"".join(m_t.pop(len(m_t)-1))})
 				else:
-					resdict.update({obj:" ".join(m_t)})
+					resdict.update({obj:"_".join(m_t)})
 					break
 			return resdict
 	except Excep as i:
 		print("Проверьте %s запроса."%i.mess)
 		return None
-	except Exception as i:
-		print(i)
+	except Exception as e:
+		bot.send_message(message.chat.id, e)
 		return None
