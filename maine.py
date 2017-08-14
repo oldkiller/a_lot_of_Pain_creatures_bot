@@ -60,6 +60,7 @@ def forecast(message):
 def yandere(message):
 	try:
 		mess=parse(message.text, {"mess":1, "tag":0, "count":1})
+		if not mess: return
 		booru=pybooru.Moebooru("yandere", hash_string=yan_api)
 		posts=booru.post_list(tags=mess["tag"], limit=int(mess["count"]))
 		if posts==[]:
@@ -83,20 +84,26 @@ def yandere(message):
 	#			 bot.send_photo(message.chat.id, urlopen(post["sample_url"]))
 	#			 bot.send_document(message.chat.id, urlopen(post["file_url"]))
 	# except Exception as e:
-	#	 pain(e)
-
-####################### Block responsible for music	########################
+	#	 bot.send_message(message.chat.id, e)
+  
+####################### Block responsible for music	###########################
 
 ################################# Secret ######################################
-# @bot.message_handler(commands=["kpi"])
-# def kpi():
-#	 try:
-#		 suka=message.text.split(" ")
-#		 su= 
-#		 gtr="groups" if 
-#	 except:
-#		 bot.send_message(message.chat.id, "Проверьте правильность запроса")
-#	 r=requests.get("")
+
+@bot.message_handler(commands=["kpi"])
+def kpi():
+	try:
+		mess=parse(message.text, {"mess":1, "group":0})
+		sear=requests.get("http://api.rozklad.hub.kpi.ua/groups/", params={"search":mess["group"]})
+		sear=sear.json()
+		g_id=[i["id"] for i in sear["resultss"] if i ["name"]==mess["group"]]
+		# if 
+		tt=requests.get("http://api.rozklad.hub.kpi.ua/groups/%s/timetable/"%g_id[0])
+		tt=tt.json()
+		bot.send_message(message.chat.id, tt)
+
+	except Exception as e:
+		bot.send_message(message.chat.id, e)
 
 ####################### Block responsible for webhooks ########################
 server = Flask(__name__)

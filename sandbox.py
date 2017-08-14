@@ -38,8 +38,8 @@ def parse(m_t,bdict):
 # string="/mess1 key1 count1"
 # st=parse(string, {"mes":1, "key":1, "req":0, "count":1})
 
-# string="/mess1 req1"
-# st=parse(string, {"mes":1, "req":1})
+# string="/mess1 req1 req2"
+# st=parse(string, {"mes":1, "req":0})
 
 print(st)
 

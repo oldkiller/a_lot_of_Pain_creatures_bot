@@ -27,8 +27,6 @@ def parse(m_t,bdict):
 					break
 			return resdict
 	except Excep as i:
-		print("Проверьте %s запроса."%i.mess)
-		return None
+		bot.send_message(message.chat.id,"Проверьте %s запроса."%i.mess)
 	except Exception as e:
 		bot.send_message(message.chat.id, e)
-		return None
