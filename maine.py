@@ -1,4 +1,5 @@
 import requests
+import datetime
 import telebot
 import pybooru
 import os
@@ -64,7 +65,7 @@ def yandere(message):
 		booru=pybooru.Moebooru("yandere", hash_string=yan_api)
 		posts=booru.post_list(tags=mess["tag"], limit=int(mess["count"]))
 		if posts==[]:
-			bot.send_message(message.chat.id, "Пост не найден.")
+			bot.send_message(message.chat.id, "Пост(ы) не найден(ы).")
 		else:
 			for post in posts:
 				bot.send_photo(message.chat.id, urlopen(post["sample_url"]))
@@ -87,23 +88,39 @@ def yandere(message):
 	#	 bot.send_message(message.chat.id, e)
   
 ####################### Block responsible for music	###########################
+# https://developer.jamendo.com/v3.0
+# 
 
 ################################# Secret ######################################
 
 @bot.message_handler(commands=["kpi"])
-def kpi():
-	try:
-		mess=parse(message.text, {"mess":1, "group":0})
-		sear=requests.get("http://api.rozklad.hub.kpi.ua/groups/", params={"search":mess["group"]})
-		sear=sear.json()
-		g_id=[i["id"] for i in sear["resultss"] if i ["name"]==mess["group"]]
-		# if 
-		tt=requests.get("http://api.rozklad.hub.kpi.ua/groups/%s/timetable/"%g_id[0])
-		tt=tt.json()
-		bot.send_message(message.chat.id, tt)
+def kpi(group):
+	day=datetime.datetime.now().isoweekday()
+	if day>6: day=1
+	week=requests.get("https://api.rozklad.org.ua/v2/weeks").json()["data"]
+	req=f"https://api.rozklad.org.ua/v2/groups/{group}/lessons"
+	tt=requests.get(req).json()
+	ntt=[i for i in tt["data"] if i["day_number"]==str(day) and i["lesson_week"]==str(week)]
+	for i in ntt:
+		mess =i["lesson_number"]+" "+f"{i['time_start']}-{i['time_end']}\n"
+		mess+=i["lesson_name"]+"\n"
+		mess+=i["teacher_name"]+"\n"
+		mess+=i["lesson_type"]+" "+i["lesson_room"]
+		bot.send_message(message.chat.id, mess)
 
-	except Exception as e:
-		bot.send_message(message.chat.id, e)
+# def kpi():
+# 	try:
+# 		mess=parse(message.text, {"mess":1, "group":0})
+# 		sear=requests.get("http://api.rozklad.hub.kpi.ua/groups/", params={"search":mess["group"]})
+# 		sear=sear.json()
+# 		g_id=[i["id"] for i in sear["resultss"] if i ["name"]==mess["group"]]
+# 		# if 
+# 		tt=requests.get("http://api.rozklad.hub.kpi.ua/groups/%s/timetable/"%g_id[0])
+# 		tt=tt.json()
+# 		bot.send_message(message.chat.id, tt)
+
+# 	except Exception as e:
+# 		bot.send_message(message.chat.id, e)
 
 ####################### Block responsible for webhooks ########################
 server = Flask(__name__)
