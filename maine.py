@@ -13,7 +13,7 @@ yan_api = "r5oUMfysc4C566kI312u_A"
 
 bot = telebot.TeleBot(tele_api)
 
-def bitch(*args):
+def bitch(message, *args):
 	bot.send_message(message.chat.id, args)
 
 @bot.message_handler(commands=['start'])
@@ -87,14 +87,14 @@ def tt(message):
 	try:
 		mess=parse(message.text, {"mess":1, "group":1})
 		bot.send_message(message.chat.id, "st 1")
-		bitch("start")
+		bitch(message,"start")
 		day=datetime.datetime.now().isoweekday()
 		if day>6: day=1
 		week=requests.get("https://api.rozklad.org.ua/v2/weeks").json()["data"]
-		bitch(day," ", week)
+		bitch(message, day," ", week)
 		tt=requests.get(f"https://api.rozklad.org.ua/v2/groups/{mess['group']}/lessons").json()
 		ntt=[i for i in tt["data"] if i["day_number"]==str(day) and i["lesson_week"]==str(week)]
-		bitch(tt,"\n",ntt)
+		bitch(message,ntt)
 		if not ntt:
 			bot.send_message(message.chat.id, "Похоже, день свободен")
 		for i in ntt:
