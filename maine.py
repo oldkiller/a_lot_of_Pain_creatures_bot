@@ -16,9 +16,14 @@ bot = telebot.TeleBot(tele_api)
 def bitch(message, *args):
 	bot.send_message(message.chat.id, args)
 
-@bot.message_handler(commands=['start'])
+@bot.message_handler(commands=["start"])
 def start(message):
 	bot.reply_to(message, 'Hello, ' + message.from_user.first_name)
+
+@bot.message_handler(commands=["help"])
+def help(message):
+	mess="""  help is comming  """
+
 
 ################## Block responsible for weather requests #####################
 def weath_req(types, message):
@@ -78,7 +83,6 @@ def yandere(message):
   
 ####################### Block responsible for music	###########################
 # https://developer.jamendo.com/v3.0
-# 
 
 ################################# Secret ######################################
 
@@ -86,14 +90,11 @@ def yandere(message):
 def tt(message):
 	try:
 		mess=parse(message.text, {"mess":1, "group":1})
-		bitch(message,"start", "bitch")
 		day=datetime.datetime.now().isoweekday()
 		if day>6: day=1
 		week=requests.get("https://api.rozklad.org.ua/v2/weeks").json()["data"]
-		bitch(message, day," ", week)
 		tt=requests.get(f"https://api.rozklad.org.ua/v2/groups/{mess['group']}/lessons").json()
 		ntt=[i for i in tt["data"] if i["day_number"]==str(day) and i["lesson_week"]==str(week)]
-		bitch(message,ntt)
 		if not ntt:
 			bot.send_message(message.chat.id, "Похоже, день свободен")
 		for i in ntt:
@@ -101,6 +102,13 @@ def tt(message):
 			mes+=i["lesson_name"]+"\n"+i["teacher_name"]+"\n"
 			mes+=i["lesson_type"]+" "+i["lesson_room"]
 			bot.send_message(message.chat.id, mes)
+	except Exception as e:
+		bot.send_message(message.chat.id, e)
+
+@bot.message_handler(commands=["donate"])
+def donate(message):
+	try:
+		mess=parse(message.text, {"mess":1, "sum":1})
 	except Exception as e:
 		bot.send_message(message.chat.id, e)
 
