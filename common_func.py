@@ -1,4 +1,4 @@
-class Excep(BaseException):
+class Except(BaseException):
 	def __init__(self, arg):
 		self.mess = arg
 
@@ -6,7 +6,7 @@ def parse(m_t,bdict):
 	try:
 		m_t=m_t.split()
 		if len(m_t)<len(bdict): 
-			raise Excep("количество елементов")
+			raise Excep("Проверьте количество елементов запроса.")
 		elif len(m_t)==len(bdict):
 			return dict(zip(bdict,m_t))
 		else:
@@ -26,7 +26,7 @@ def parse(m_t,bdict):
 					resdict.update({obj:"_".join(m_t)})
 					break
 			return resdict
-	except Excep as i:
-		bot.send_message(message.chat.id,"Проверьте %s запроса."%i.mess)
+	except Except as i:
+		raise i
 	except Exception as e:
-		bot.send_message(message.chat.id, e)
+		raise e

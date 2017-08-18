@@ -41,7 +41,7 @@ def parse(m_t,bdict):
 # string="/mess1 req1 req2"
 # st=parse(string, {"mes":1, "req":0})
 
-def kpi(group):
+def tt(group):
 	import datetime, requests
 	day=datetime.datetime.now().isoweekday()
 	if day>6: day=1
@@ -56,7 +56,6 @@ def kpi(group):
 		mess+=i["lesson_type"]+" "+i["lesson_room"]
 		print(mess,"\n")
 
-kpi("бс-51")
-
+tt("бс-51")
 
 input()

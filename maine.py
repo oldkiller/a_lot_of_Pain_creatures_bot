@@ -3,7 +3,7 @@ import datetime
 import telebot
 import pybooru
 import os
-from common_func import parse
+from common_func import *
 from urllib.request import urlopen
 from flask import Flask, request
 
@@ -12,6 +12,9 @@ weath_token = "795819f679706a61cd7938b26ac247af"
 yan_api = "r5oUMfysc4C566kI312u_A"
 
 bot = telebot.TeleBot(tele_api)
+
+def bitch(*args):
+	bot.send_message(message.chat.id, args)
 
 @bot.message_handler(commands=['start'])
 def start(message):
@@ -93,24 +96,27 @@ def yandere(message):
 
 ################################# Secret ######################################
 
-@bot.message_handler(commands=["kpi"])
-def kpi():
+@bot.message_handler(commands=["tt"])
+def tt():
 	try:
-		mess=parse(message.text, {"mess":1, "group":0})
+		mess=parse(message.text, {"mess":1, "group":1})
 		day=datetime.datetime.now().isoweekday()
 		if day>6: day=1
 		week=requests.get("https://api.rozklad.org.ua/v2/weeks").json()["data"]
-		req=f"https://api.rozklad.org.ua/v2/groups/{mess['group']}/lessons"
-		tt=requests.get(req).json()
+		bitch(day," ", week)
+		tt=requests.get(f"https://api.rozklad.org.ua/v2/groups/{mess['group']}/lessons").json()
 		ntt=[i for i in tt["data"] if i["day_number"]==str(day) and i["lesson_week"]==str(week)]
+		bitch(tt,"\n",ntt)
+		if not ntt:
+			bot.send_message(message.chat.id, "Похоже, день свободен")
 		for i in ntt:
 			mes =i["lesson_number"]+" "+f"{i['time_start']}-{i['time_end']}\n"
-			mes+=i["lesson_name"]+"\n"
-			mes+=i["teacher_name"]+"\n"
+			mes+=i["lesson_name"]+"\n"+i["teacher_name"]+"\n"
 			mes+=i["lesson_type"]+" "+i["lesson_room"]
 			bot.send_message(message.chat.id, mes)
 	except Exception as e:
 		bot.send_message(message.chat.id, e)
+
 # def kpi():
 # 	try:
 # 		mess=parse(message.text, {"mess":1, "group":0})
