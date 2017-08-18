@@ -83,42 +83,27 @@ def yandere(message):
 ################################# Secret ######################################
 
 @bot.message_handler(commands=["tt"])
-def tt():
-	bot.send_message(message.chat.id, message.text)
-	# try:
-	# 	mess=parse(message.text, {"mess":1, "group":1})
-	# 	bot.send_message(message.chat.id, "st 1")
-	# 	bitch("start")
-	# 	day=datetime.datetime.now().isoweekday()
-	# 	if day>6: day=1
-	# 	week=requests.get("https://api.rozklad.org.ua/v2/weeks").json()["data"]
-	# 	bitch(day," ", week)
-	# 	tt=requests.get(f"https://api.rozklad.org.ua/v2/groups/{mess['group']}/lessons").json()
-	# 	ntt=[i for i in tt["data"] if i["day_number"]==str(day) and i["lesson_week"]==str(week)]
-	# 	bitch(tt,"\n",ntt)
-	# 	if not ntt:
-	# 		bot.send_message(message.chat.id, "Похоже, день свободен")
-	# 	for i in ntt:
-	# 		mes =i["lesson_number"]+" "+f"{i['time_start']}-{i['time_end']}\n"
-	# 		mes+=i["lesson_name"]+"\n"+i["teacher_name"]+"\n"
-	# 		mes+=i["lesson_type"]+" "+i["lesson_room"]
-	# 		bot.send_message(message.chat.id, mes)
-	# except Exception as e:
-	# 	bot.send_message(message.chat.id, e)
-
-# def kpi():
-# 	try:
-# 		mess=parse(message.text, {"mess":1, "group":0})
-# 		sear=requests.get("http://api.rozklad.hub.kpi.ua/groups/", params={"search":mess["group"]})
-# 		sear=sear.json()
-# 		g_id=[i["id"] for i in sear["resultss"] if i ["name"]==mess["group"]]
-# 		# if 
-# 		tt=requests.get("http://api.rozklad.hub.kpi.ua/groups/%s/timetable/"%g_id[0])
-# 		tt=tt.json()
-# 		bot.send_message(message.chat.id, tt)
-
-# 	except Exception as e:
-# 		bot.send_message(message.chat.id, e)
+def tt(message):
+	try:
+		mess=parse(message.text, {"mess":1, "group":1})
+		bot.send_message(message.chat.id, "st 1")
+		bitch("start")
+		day=datetime.datetime.now().isoweekday()
+		if day>6: day=1
+		week=requests.get("https://api.rozklad.org.ua/v2/weeks").json()["data"]
+		bitch(day," ", week)
+		tt=requests.get(f"https://api.rozklad.org.ua/v2/groups/{mess['group']}/lessons").json()
+		ntt=[i for i in tt["data"] if i["day_number"]==str(day) and i["lesson_week"]==str(week)]
+		bitch(tt,"\n",ntt)
+		if not ntt:
+			bot.send_message(message.chat.id, "Похоже, день свободен")
+		for i in ntt:
+			mes =i["lesson_number"]+" "+f"{i['time_start']}-{i['time_end']}\n"
+			mes+=i["lesson_name"]+"\n"+i["teacher_name"]+"\n"
+			mes+=i["lesson_type"]+" "+i["lesson_room"]
+			bot.send_message(message.chat.id, mes)
+	except Exception as e:
+		bot.send_message(message.chat.id, e)
 
 ####################### Block responsible for webhooks ########################
 server = Flask(__name__)
