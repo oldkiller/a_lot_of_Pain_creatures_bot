@@ -75,20 +75,6 @@ def yandere(message):
 				bot.send_document(message.chat.id, urlopen(post["file_url"]))
 	except Exception as e:
 		bot.send_message(message.chat.id, e)
-	# try:
-	#	 parse_mess = message.text.split(" ")
-	#	 tag="_".join(parse_mess[1:len(parse_mess)-1])
-	#	 lim=int(parse_mess[-1])
-	#	 yander=pybooru.Moebooru("yandere", hash_string=yan_api)
-	#	 p_list=yander.post_list(tags=tag, limit=lim)
-	#	 if p_list == []:
-	#		 bot.send_message(message.chat.id, "Проблемный запрос")
-	#	 else:
-	#		 for post in p_list:
-	#			 bot.send_photo(message.chat.id, urlopen(post["sample_url"]))
-	#			 bot.send_document(message.chat.id, urlopen(post["file_url"]))
-	# except Exception as e:
-	#	 bot.send_message(message.chat.id, e)
   
 ####################### Block responsible for music	###########################
 # https://developer.jamendo.com/v3.0
@@ -98,26 +84,27 @@ def yandere(message):
 
 @bot.message_handler(commands=["tt"])
 def tt():
-	try:
-		mess=parse(message.text, {"mess":1, "group":1})
-		bot.send_message(message.chat.id, "st 1")
-		bitch("start")
-		day=datetime.datetime.now().isoweekday()
-		if day>6: day=1
-		week=requests.get("https://api.rozklad.org.ua/v2/weeks").json()["data"]
-		bitch(day," ", week)
-		tt=requests.get(f"https://api.rozklad.org.ua/v2/groups/{mess['group']}/lessons").json()
-		ntt=[i for i in tt["data"] if i["day_number"]==str(day) and i["lesson_week"]==str(week)]
-		bitch(tt,"\n",ntt)
-		if not ntt:
-			bot.send_message(message.chat.id, "Похоже, день свободен")
-		for i in ntt:
-			mes =i["lesson_number"]+" "+f"{i['time_start']}-{i['time_end']}\n"
-			mes+=i["lesson_name"]+"\n"+i["teacher_name"]+"\n"
-			mes+=i["lesson_type"]+" "+i["lesson_room"]
-			bot.send_message(message.chat.id, mes)
-	except Exception as e:
-		bot.send_message(message.chat.id, e)
+	bot.send_message(message.chat.id, message.text)
+	# try:
+	# 	mess=parse(message.text, {"mess":1, "group":1})
+	# 	bot.send_message(message.chat.id, "st 1")
+	# 	bitch("start")
+	# 	day=datetime.datetime.now().isoweekday()
+	# 	if day>6: day=1
+	# 	week=requests.get("https://api.rozklad.org.ua/v2/weeks").json()["data"]
+	# 	bitch(day," ", week)
+	# 	tt=requests.get(f"https://api.rozklad.org.ua/v2/groups/{mess['group']}/lessons").json()
+	# 	ntt=[i for i in tt["data"] if i["day_number"]==str(day) and i["lesson_week"]==str(week)]
+	# 	bitch(tt,"\n",ntt)
+	# 	if not ntt:
+	# 		bot.send_message(message.chat.id, "Похоже, день свободен")
+	# 	for i in ntt:
+	# 		mes =i["lesson_number"]+" "+f"{i['time_start']}-{i['time_end']}\n"
+	# 		mes+=i["lesson_name"]+"\n"+i["teacher_name"]+"\n"
+	# 		mes+=i["lesson_type"]+" "+i["lesson_room"]
+	# 		bot.send_message(message.chat.id, mes)
+	# except Exception as e:
+	# 	bot.send_message(message.chat.id, e)
 
 # def kpi():
 # 	try:
