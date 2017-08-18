@@ -100,6 +100,7 @@ def yandere(message):
 def tt():
 	try:
 		mess=parse(message.text, {"mess":1, "group":1})
+		bot.send_message(message.chat.id, "st 1")
 		bitch("start")
 		day=datetime.datetime.now().isoweekday()
 		if day>6: day=1
