@@ -86,8 +86,7 @@ def yandere(message):
 def tt(message):
 	try:
 		mess=parse(message.text, {"mess":1, "group":1})
-		bot.send_message(message.chat.id, "st 1")
-		bitch(message,"start")
+		bitch(message,"start", "bitch")
 		day=datetime.datetime.now().isoweekday()
 		if day>6: day=1
 		week=requests.get("https://api.rozklad.org.ua/v2/weeks").json()["data"]
