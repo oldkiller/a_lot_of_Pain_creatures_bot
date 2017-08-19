@@ -21,25 +21,12 @@ def start(message):
 def help(message):
 	mess="""  help is comming  """
 
-
 ################## Block responsible for weather requests #####################
-# def weath_req(types, message):
-# 	try:
-# 		city=message.text.split(" ")
-# 		if city[-1]!="/"+types and len(city[-1])!=0:
-# 			res=requests.get(f"http://api.openweathermap.org/data/2.5/{types}", 
-# 						params={"q":city[1],'units':'metric', 'lang':'ru', "APPID":weath_token})
-# 		else:
-# 			bot.send_message(message.chat.id, "Укажите город, для которого выполняется поиск.")
-# 		data = res.json()
-# 		return data
-# 	except Exception as e:
-# 		bot.send_message(message.chat.id, e)
 def weath_req(types, message):
 	try:
 		mess=parse(message.text, {"mess":1, "city":0})
 		req=f"http://api.openweathermap.org/data/2.5/{types}"
-		param={"q":mess['city'],'units':'metric', 'lang':'ru', "APPID":weath_token}
+		param={"q":mess["city"],"units":"metric","lang":"ru","APPID":weath_token}
 		data=requests.get(req, params=param).json()
 		return data
 	except Exception as e:
@@ -62,10 +49,6 @@ def weather(message):
 @bot.message_handler(commands=['forecast'])
 def forecast(message):
 	data = weath_req("forecast", message)
-	# for i in data["list"]:
-	# 	if i["dt_txt"][11:13]=="12" or i["dt_txt"][11:13]=="00":
-	# 		mess=i["dt_txt"]+" : "+weath_reply(i)
-	# 		bot.send_message(message.chat.id, mess)
 	res=[i for i in data["list"] if i["dt_txt"][11:13] in ["12","00"]]
 	for i in res:
 		bot.send_message(message.chat.id, i["dt_txt"]+" : "+weath_reply(i))
