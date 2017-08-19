@@ -65,7 +65,7 @@ def yandere(message):
 		for post in posts:
 			bot.send_photo(message.chat.id, urlopen(post["sample_url"]))
 			bot.send_document(message.chat.id, urlopen(post["file_url"]))
-			bot.send_data(message, urlopen(post["file_url"]), "neko.jpg")
+			bot.send_data(message.chat.id, urlopen(post["file_url"]), "neko.jpg")
 	except Except as i:
 		bot.send_message(message.chat.id, i)
 	except Exception as e:
