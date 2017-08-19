@@ -41,21 +41,4 @@ def parse(m_t,bdict):
 # string="/mess1 req1 req2"
 # st=parse(string, {"mes":1, "req":0})
 
-def tt(group):
-	import datetime, requests
-	day=datetime.datetime.now().isoweekday()
-	if day>6: day=1
-	week=requests.get("https://api.rozklad.org.ua/v2/weeks").json()["data"]
-	req=f"https://api.rozklad.org.ua/v2/groups/{group}/lessons"
-	tt=requests.get(req).json()
-	ntt=[i for i in tt["data"] if i["day_number"]==str(day) and i["lesson_week"]==str(week)]
-	for i in ntt:
-		mess =i["lesson_number"]+" "+f"{i['time_start']}-{i['time_end']}\n"
-		mess+=i["lesson_name"]+"\n"
-		mess+=i["teacher_name"]+"\n"
-		mess+=i["lesson_type"]+" "+i["lesson_room"]
-		print(mess,"\n")
-
-tt("бс-51")
-
 input()

@@ -13,9 +13,6 @@ yan_api = "r5oUMfysc4C566kI312u_A"
 
 bot = telebot.TeleBot(tele_api)
 
-def bitch(message, *args):
-	bot.send_message(message.chat.id, args)
-
 @bot.message_handler(commands=["start"])
 def start(message):
 	bot.reply_to(message, 'Hello, ' + message.from_user.first_name)
@@ -26,24 +23,31 @@ def help(message):
 
 
 ################## Block responsible for weather requests #####################
+# def weath_req(types, message):
+# 	try:
+# 		city=message.text.split(" ")
+# 		if city[-1]!="/"+types and len(city[-1])!=0:
+# 			res=requests.get(f"http://api.openweathermap.org/data/2.5/{types}", 
+# 						params={"q":city[1],'units':'metric', 'lang':'ru', "APPID":weath_token})
+# 		else:
+# 			bot.send_message(message.chat.id, "Укажите город, для которого выполняется поиск.")
+# 		data = res.json()
+# 		return data
+# 	except Exception as e:
+# 		bot.send_message(message.chat.id, e)
 def weath_req(types, message):
 	try:
-		city=message.text.split(" ")
-		if city[-1]!="/"+types and len(city[-1])!=0:
-			res=requests.get(f"http://api.openweathermap.org/data/2.5/{types}", 
-						params={"q":city[1],'units':'metric', 'lang':'ru', "APPID":weath_token})
-		else:
-			bot.send_message(message.chat.id, "Укажите город, для которого выполняется поиск.")
-		data = res.json()
+		mess=parse(message.text, {"mess":1, "city":0})
+		req=f"http://api.openweathermap.org/data/2.5/{mess['city']}"
+		param={"q":city[1],'units':'metric', 'lang':'ru', "APPID":weath_token}
+		data=requests.get(req, params=param).json()
 		return data
 	except Exception as e:
-		pain(e)
-		print('Exception', e)
+		bot.send_message(message.chat.id, e)
 
-def weath_mess_form(data, mess=""):
+def weath_reply(data, mess=""):
 	tostr = lambda i: "{0:+3.0f}".format(i)
-	mess+= data['weather'][0]['description']+", "
-	mess= mess[0].upper()+mess[1:]
+	mess+= data['weather'][0]['description'].capitalize()+", "
 	mess+= tostr(data["main"]["temp"])+"°C, "
 	mess+= "влажность: "+tostr(data["main"]["humidity"])+"%, "
 	mess+= "cкорость ветра: "+tostr(data["wind"]["speed"])+"м/с, "
@@ -53,31 +57,33 @@ def weath_mess_form(data, mess=""):
 @bot.message_handler(commands=['weather'])
 def weather(message):
 	data = weath_req("weather", message)
-	mess = weath_mess_form(data)
-	bot.send_message(message.chat.id,mess)
+	bot.send_message(message.chat.id,weath_reply(data))
 
 @bot.message_handler(commands=['forecast'])
 def forecast(message):
 	data = weath_req("forecast", message)
-	for i in data["list"]:
-		if i["dt_txt"][11:13]=="12" or i["dt_txt"][11:13]=="00":
-			mess=i["dt_txt"]+" : "+weath_mess_form(i)
-			bot.send_message(message.chat.id, mess)
+	# for i in data["list"]:
+	# 	if i["dt_txt"][11:13]=="12" or i["dt_txt"][11:13]=="00":
+	# 		mess=i["dt_txt"]+" : "+weath_reply(i)
+	# 		bot.send_message(message.chat.id, mess)
+	res=[i for i in data["list"] if i["dt_txt"][11:13] in ["12","00"]]
+	for i in res:
+		bot.send_message(message.chat.id, i["dt_txt"]+" : "+weath_reply(i))
 
 ####################### Block responsible for pictures ########################
 @bot.message_handler(commands=["yandere"])
 def yandere(message):
 	try:
 		mess=parse(message.text, {"mess":1, "tag":0, "count":1})
-		if not mess: return
+		if not mess: raise Except("Неполное тело запроса")
 		booru=pybooru.Moebooru("yandere", hash_string=yan_api)
 		posts=booru.post_list(tags=mess["tag"], limit=int(mess["count"]))
-		if posts==[]:
-			bot.send_message(message.chat.id, "Пост(ы) не найден(ы).")
-		else:
-			for post in posts:
-				bot.send_photo(message.chat.id, urlopen(post["sample_url"]))
-				bot.send_document(message.chat.id, urlopen(post["file_url"]))
+		if posts==[]: raise Except("Пост(ы) не найден(ы).")
+		for post in posts:
+			bot.send_photo(message.chat.id, urlopen(post["sample_url"]))
+			bot.send_document(message.chat.id, urlopen(post["file_url"]))
+	except Except as i:
+		bot.send_message(message.chat.id, i)
 	except Exception as e:
 		bot.send_message(message.chat.id, e)
   
@@ -86,8 +92,8 @@ def yandere(message):
 
 ################################# Secret ######################################
 
-@bot.message_handler(commands=["tt"])
-def tt(message):
+@bot.message_handler(commands=["timetable"])
+def timetable(message):
 	try:
 		mess=parse(message.text, {"mess":1, "group":1})
 		day=datetime.datetime.now().isoweekday()
@@ -102,13 +108,6 @@ def tt(message):
 			mes+=i["lesson_name"]+"\n"+i["teacher_name"]+"\n"
 			mes+=i["lesson_type"]+" "+i["lesson_room"]
 			bot.send_message(message.chat.id, mes)
-	except Exception as e:
-		bot.send_message(message.chat.id, e)
-
-@bot.message_handler(commands=["donate"])
-def donate(message):
-	try:
-		mess=parse(message.text, {"mess":1, "sum":1})
 	except Exception as e:
 		bot.send_message(message.chat.id, e)
 

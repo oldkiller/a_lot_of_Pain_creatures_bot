@@ -2,13 +2,13 @@ class Except(BaseException):
 	def __init__(self, arg):
 		self.mess = arg
 
-def parse(m_t,bdict):
+def parse(req_str,bdict): 
 	try:
-		m_t=m_t.split()
-		if len(m_t)<len(bdict): 
-			raise Excep("Проверьте количество елементов запроса.")
-		elif len(m_t)==len(bdict):
-			return dict(zip(bdict,m_t))
+		req_str=req_str.split()
+		if len(req_str)<len(bdict): 
+			raise Except("Проверьте количество елементов запроса.")
+		elif len(req_str)==len(bdict):
+			return dict(zip(bdict,req_str))
 		else:
 			resdict=bdict.copy()
 			key=list(resdict.keys())
@@ -16,14 +16,14 @@ def parse(m_t,bdict):
 			rkey.reverse()
 			for obj in key:
 				if resdict[obj]:
-					resdict.update({obj:"".join(m_t.pop(0))})
+					resdict.update({obj:"".join(req_str.pop(0))})
 				else:
 					break
 			for obj in rkey:
 				if resdict[obj]:
-					resdict.update({obj:"".join(m_t.pop(len(m_t)-1))})
+					resdict.update({obj:"".join(req_str.pop(len(req_str)-1))})
 				else:
-					resdict.update({obj:"_".join(m_t)})
+					resdict.update({obj:"_".join(req_str)})
 					break
 			return resdict
 	except Except as i:
