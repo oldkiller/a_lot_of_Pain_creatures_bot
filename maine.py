@@ -55,10 +55,17 @@ def weather(message):
 
 @bot.message_handler(commands=['forecast'])
 def forecast(message):
+	mess=parse(message_text, {"m":1, "key":1, "city":1})
+	req=["00","03","06","09","12","15","18","21"]
+	keys={"s":4, "m":2, "l":1}
 	data = weath_req("forecast", message)
-	res=[i for i in data["list"] if i["dt_txt"][11:13] in ["12","00"]]
+	res=[i for i in data["list"] if i["dt_txt"][11:13] in req[::keys[mess["key"]]]]
 	for i in res:
 		bot.send_message(message.chat.id, i["dt_txt"]+" : "+weath_reply(i))
+	# data = weath_req("forecast", message)
+	# res=[i for i in data["list"] if i["dt_txt"][11:13] in ["12","00"]]
+	# for i in res:
+	# 	bot.send_message(message.chat.id, i["dt_txt"]+" : "+weath_reply(i))
 
 ####################### Block responsible for pictures ########################
 @bot.message_handler(commands=["yandere"])
