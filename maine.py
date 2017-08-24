@@ -20,10 +20,10 @@ def start(message):
 @bot.message_handler(commands=["help"])
 def help(message):
 	mess="""
-	/weather <city> - Узнать погоду в <city>\n
-	/forecast <key> <city> - Узнать прогноз погоды в <city>, <key> - может принимать значения s,m,l\n
-	/yandere <tag> <count> - Поиск изображений на yande.re, <tag> - теги для поиска, <count> - количество\n
-	/timetable <group> - <group> - група, для которой берется рассписание\n
+	/weather <city> - Узнать погоду в <city>
+	/forecast <key> <city> - Узнать прогноз погоды в <city>, <key> - может принимать значения s,m,l
+	/yandere <tag> <count> - Поиск изображений на yande.re, <tag> - теги для поиска, <count> - количество
+	/timetable <group> - <group> - група, для которой берется рассписание
 	help is coming
 	"""
 	bot.send_message(message.chat.id, mess)
@@ -66,8 +66,8 @@ def yandere(message):
 	try:
 		mess=parse(message.text, {"mess":1, "tag":0, "count":1})
 		if not mess: raise Except("Неполное тело запроса")
-		#booru=pybooru.Moebooru("yandere", hash_string=yan_api)
-		booru=pybooru.Moebooru(mess["mess"][1:])#, hash_string=yan_api)
+		booru=pybooru.Moebooru("yandere", hash_string=yan_api)
+		#booru=pybooru.Moebooru(mess["mess"][1:])#, hash_string=yan_api)
 		posts=booru.post_list(tags=mess["tag"], limit=int(mess["count"]))
 		if posts==[]: raise Except("Пост(ы) не найден(ы).")
 		for post in posts:
