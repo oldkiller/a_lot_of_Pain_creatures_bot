@@ -94,7 +94,7 @@ def forecast(message):
 # 	print(i)
 
 ####################### Block responsible for pictures ########################
-@bot.message_handler(commands=["yandere", "konachan"])
+@bot.message_handler(commands=["yandere"])
 def yandere(message):
 	try:
 		mess=parse(message.text, {"mess":1, "tag":0, "count":1})
