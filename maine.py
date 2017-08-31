@@ -18,15 +18,15 @@ def start(message):
 	bot.reply_to(message, 'Hello, ' + message.from_user.first_name)
 
 @bot.message_handler(commands=["help"])
-def help(message):
-	mess="""
-/weather <city> - Узнать погоду в <city>
-/forecast <key> <city> - Узнать прогноз погоды в <city>, <key> - может принимать значения s,m,l
-/yandere <tag> <count> - Поиск изображений на yande.re, <tag> - теги для поиска, <count> - количество
-/timetable <group> - <group> - група, для которой берется рассписание
-help is coming
+def helps(message):
 	"""
-	bot.send_message(message.chat.id, mess)
+	/weather <city> - Узнать погоду в <city>
+	/forecast <key> <city> - Узнать прогноз погоды в <city>, <key> - может принимать значения s,m,l
+	/yandere <tag> <count> - Поиск изображений на yande.re, <tag> - теги для поиска, <count> - количество
+	/timetable <group> - <group> - група, для которой берется рассписание
+	help is coming
+	"""
+	bot.send_message(message.chat.id, help(helps))
 
 ################## Block responsible for weather requests #####################
 def weath_req(types,city):
