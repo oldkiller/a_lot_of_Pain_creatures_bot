@@ -42,7 +42,7 @@ def help(message):
 def weath_req(types,city):
 	try:
 		req=f"http://api.openweathermap.org/data/2.5/{types}"
-		param={"q":mess["city"],"units":"metric","lang":"ru","APPID":weath_token}
+		param={"q":city,"units":"metric","lang":"ru","APPID":weath_token}
 		data=requests.get(req, params=param).json()
 		return data
 	except Exception as e:
