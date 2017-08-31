@@ -72,14 +72,4 @@ def parse(p_str, base_dict, sep="_"):
 	except Exception as e:
 		print(e)
 
-
-# for forecast
-message_text="/weather s kiev"
-mess=parse(message_text, {"m":1, "key":1, "city":1})
-req=["00","03","06","09","12","15","18","21"]
-keys={"s":4, "m":2, "l":1}
-res=[i for i in req if i in req[::keys[mess["key"]]]]
-for i in res:
-	print(i)
-
 input()

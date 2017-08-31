@@ -20,11 +20,11 @@ def start(message):
 @bot.message_handler(commands=["help"])
 def help(message):
 	mess="""
-	/weather <city> - Узнать погоду в <city>
-	/forecast <key> <city> - Узнать прогноз погоды в <city>, <key> - может принимать значения s,m,l
-	/yandere <tag> <count> - Поиск изображений на yande.re, <tag> - теги для поиска, <count> - количество
-	/timetable <group> - <group> - група, для которой берется рассписание
-	help is coming
+/weather <city> - Узнать погоду в <city>
+/forecast <key> <city> - Узнать прогноз погоды в <city>, <key> - может принимать значения s,m,l
+/yandere <tag> <count> - Поиск изображений на yande.re, <tag> - теги для поиска, <count> - количество
+/timetable <group> - <group> - група, для которой берется рассписание
+help is coming
 	"""
 	bot.send_message(message.chat.id, mess)
 
