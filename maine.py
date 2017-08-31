@@ -29,9 +29,18 @@ def help(message):
 	bot.send_message(message.chat.id, mess)
 
 ################## Block responsible for weather requests #####################
-def weath_req(types, message):
+# def weath_req(types, message):
+# 	try:
+# 		mess=parse(message.text, {"mess":1, "city":0})
+# 		req=f"http://api.openweathermap.org/data/2.5/{types}"
+# 		param={"q":mess["city"],"units":"metric","lang":"ru","APPID":weath_token}
+# 		data=requests.get(req, params=param).json()
+# 		return data
+# 	except Exception as e:
+# 		bot.send_message(message.chat.id, e)
+
+def weath_req(types,city):
 	try:
-		mess=parse(message.text, {"mess":1, "city":0})
 		req=f"http://api.openweathermap.org/data/2.5/{types}"
 		param={"q":mess["city"],"units":"metric","lang":"ru","APPID":weath_token}
 		data=requests.get(req, params=param).json()
@@ -48,17 +57,41 @@ def weath_reply(data, mess=""):
 	mess += "облачность: "+tostr(data["clouds"]["all"])+"%"
 	return mess
 
+# @bot.message_handler(commands=['weather'])
+# def weather(message):
+# 	data=weath_req("weather", message)
+# 	bot.send_message(message.chat.id,weath_reply(data))
+
+# @bot.message_handler(commands=['forecast'])
+# def forecast(message):
+# 	data = weath_req("forecast", message)
+# 	res=[i for i in data["list"] if i["dt_txt"][11:13] in ["12","00"]]
+# 	for i in res:
+# 		bot.send_message(message.chat.id, i["dt_txt"]+" : "+weath_reply(i))
+
 @bot.message_handler(commands=['weather'])
 def weather(message):
-	data=weath_req("weather", message)
+	pmes=parse(message.text, {"mess":1, "city":0})
+	data=weath_req("weather", pmes["city"])
 	bot.send_message(message.chat.id,weath_reply(data))
 
-@bot.message_handler(commands=['forecast'])
+@bot.message_handler(commands=["forecast"])
 def forecast(message):
-	data = weath_req("forecast", message)
-	res=[i for i in data["list"] if i["dt_txt"][11:13] in ["12","00"]]
+	pmes=parse(message.text, {"mess":1, "key":1, "city":0})
+	data=weath_req("forecast", pmes["city"])
+	time_list=["00","03","06","09","12","15","18","21"]
+	time_key={"s":4, "m":2, "l":1}
+	res=[i for i in data["list"] if i["dt_txt"][11:13] in time_list[::time_key[pmes["key"]]]]
 	for i in res:
 		bot.send_message(message.chat.id, i["dt_txt"]+" : "+weath_reply(i))
+
+# message_text="/weather s kiev"
+# mess=parse(message_text, {"m":1, "key":1, "city":1})
+# req=["00","03","06","09","12","15","18","21"]
+# keys={"s":4, "m":2, "l":1}
+# res=[i for i in req if i in req[::keys[mess["key"]]]]
+# for i in res:
+# 	print(i)
 
 ####################### Block responsible for pictures ########################
 @bot.message_handler(commands=["yandere", "konachan"])
