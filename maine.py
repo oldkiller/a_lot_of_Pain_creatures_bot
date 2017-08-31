@@ -19,14 +19,14 @@ def start(message):
 
 @bot.message_handler(commands=["help"])
 def helps(message):
-	"""
+	hmess="""
 	/weather <city> - Узнать погоду в <city>
 	/forecast <key> <city> - Узнать прогноз погоды в <city>, <key> - может принимать значения s,m,l
 	/yandere <tag> <count> - Поиск изображений на yande.re, <tag> - теги для поиска, <count> - количество
 	/timetable <group> - <group> - група, для которой берется рассписание
 	help is coming
 	"""
-	bot.send_message(message.chat.id, help(helps))
+	bot.send_message(message.chat.id, hmess)
 
 ################## Block responsible for weather requests #####################
 def weath_req(types,city):
