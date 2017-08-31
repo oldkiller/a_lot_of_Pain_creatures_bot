@@ -39,7 +39,7 @@ def parse(p_str, base_dict, sep="_"):
 	try:
 		pars_list=p_str.split()
 		if len(pars_list)<len(base_dict):
-			raise Excep("Неполный запрос")
+			raise Except("Неполный запрос")
 		if len(pars_list)==len(base_dict):
 			return dict(zip(base_dict,pars_list))
 		if len(pars_list)==sum(base_dict.values()):
@@ -65,7 +65,7 @@ def parse(p_str, base_dict, sep="_"):
 					break
 			return base_dict
 		else:
-			raise Excep("Дерьмо случается")
+			raise Except("Дерьмо случается")
 	except Except as i:
 		raise i
 	except Exception as e:
