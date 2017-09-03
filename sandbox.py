@@ -38,4 +38,16 @@ def parse(p_str, base_dict, sep="_"):
 	except Exception as e:
 		print(e)
 
+def test(p_str, *param, sep="_", **bdict):
+	try:
+		a=int(bdict["mess"][0])
+	except:
+		bdict.update({"mess":bdict["mess"][1]})
+	else:
+		bdict.update({"mess":a})
+	print(bdict, list(param))
+
+test("sss","lol",mess=["u",2])
+
+
 input()

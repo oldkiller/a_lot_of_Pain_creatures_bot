@@ -19,14 +19,14 @@ def start(message):
 
 @bot.message_handler(commands=["help"])
 def helps(message):
-	hmess="""
+	help_mess="""
 	/weather <city> - Узнать погоду в <city>
 	/forecast <key> <city> - Узнать прогноз погоды в <city>, <key> - может принимать значения s,m,l
 	/yandere <tag> <count> - Поиск изображений на yande.re, <tag> - теги для поиска, <count> - количество
 	/timetable <group> - <group> - група, для которой берется рассписание
 	help is coming
 	"""
-	bot.send_message(message.chat.id, hmess)
+	bot.send_message(message.chat.id, help_mess)
 
 ################## Block responsible for weather requests #####################
 def weath_req(types,city):
@@ -84,8 +84,13 @@ def yandere(message):
 ####################### Block responsible for music	###########################
 # https://developer.jamendo.com/v3.0
 
-################################# Secret ######################################
+################################### DB ########################################
+@bot.message_handler(commands=["db"])
+def bds(message):
+	bot.send_message(message.chat.id, os.environ["DATABASE_URL"])
 
+################################# Secret ######################################
+# TODO забацать ключики
 @bot.message_handler(commands=["timetable"])
 def timetable(message):
 	try:
