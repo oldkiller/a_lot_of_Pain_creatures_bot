@@ -1,3 +1,4 @@
+import postgresql
 import requests
 import datetime
 import telebot
@@ -87,6 +88,10 @@ def yandere(message):
 ################################### DB ########################################
 @bot.message_handler(commands=["db"])
 def bds(message):
+	with postgresql.open(os.environ["DATABASE_URL"]) as db:
+		db.execute("CREATE TABLE users (id SERIAL PRIMARY KEY, "
+					"login CHAR(64), password CHAR(64))")
+
 	bot.send_message(message.chat.id, os.environ["DATABASE_URL"])
 
 ################################# Secret ######################################
