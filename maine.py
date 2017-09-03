@@ -89,11 +89,10 @@ def yandere(message):
 @bot.message_handler(commands=["db"])
 def bds(message):
 	bot.send_message(message.chat.id, os.environ["DATABASE_URL"])
-	with postgresql.open(os.environ["DATABASE_URL"]) as con:
-		con.execute("CREATE TABLE users (id SERIAL PRIMARY KEY, "
-					"login CHAR(64), password CHAR(64))")
-		con.commit()
-		con.close()
+	con=postgresql.open(os.environ["DATABASE_URL"])
+	con.execute("CREATE TABLE users (id SERIAL PRIMARY KEY, login CHAR(64)")
+	con.commit()
+	con.close()
 
 	bot.send_message(message.chat.id, os.environ["DATABASE_URL"])
 
