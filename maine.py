@@ -60,6 +60,7 @@ def forecast(message):
 	data=weath_req("forecast", pmes["city"])
 	tlist=["00","03","06","09","12","15","18","21"]
 	tkey={"s":4, "m":2, "l":1}
+	#tkey=dict(s=4, m=2, l=1)
 	res=[i for i in data["list"] if i["dt_txt"][11:13] in tlist[::tkey[pmes["key"]]]]
 	for i in res:
 		bot.send_message(message.chat.id, i["dt_txt"]+" : "+weath_reply(i))
@@ -97,7 +98,7 @@ def bds(message):
 	bot.send_message(message.chat.id, os.environ["DATABASE_URL"])
 
 ################################# Secret ######################################
-# TODO забацать ключики
+#TODO Ключи для рассписания: { n - now, d - day, t - tomorow, w - week, f - full }
 @bot.message_handler(commands=["timetable"])
 def timetable(message):
 	try:
@@ -117,6 +118,28 @@ def timetable(message):
 	except Exception as e:
 		bot.send_message(message.chat.id, e)
 
+@bot.message_handler(commands=["timetable2"])
+def timetable2(message):
+	try:
+		api_link="https://api.rozklad.org.ua/v2/"
+		mess=parse2(message.text, mess=1, key=1, group=1)
+		day=datetime.datetime.now().isoweekday()
+		if day>6: day=1
+		week=requests.get(api_link+"weeks").json()["data"]
+		tt=requests.get(api_link+f"groups/{mess['group']}/lessons").json()
+		key={"d":[[day],[week]], "t":[[day+1],[week]], "w":[range(1,7),[week]], "f":[range(1,7),range(1,3)]}
+		ntt=[i for i in tt["data"] if int(i["day_number"]) in key[mess["key"]][0] and int(i["lesson_week"]) in key[mess["key"]][1] ]
+		if not ntt:
+			bot.send_message(message.chat.id, "Похоже, день свободен")
+		for i in ntt:
+			mes =i["lesson_number"]+" "+f"{i['time_start']}-{i['time_end']}\n"
+			mes+=i["lesson_name"]+"\n"+i["teacher_name"]+"\n"
+			mes+=i["lesson_type"]+" "+i["lesson_room"]
+	except Exception as e:
+		bot.send_message(message.chat.id, e)
+
+# TODO Ключи по умолчанию.
+# TODO переводчика добавить
 ####################### Block responsible for webhooks ########################
 server = Flask(__name__)
 
