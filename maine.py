@@ -77,7 +77,11 @@ def yandere(message):
 		if posts==[]: raise Except("Пост(ы) не найден(ы).")
 		for post in posts:
 			bot.send_photo(message.chat.id, urlopen(post["sample_url"]))
-			bot.send_document(message.chat.id, urlopen(post["file_url"]))
+			#bot.send_document(message.chat.id, urlopen(post["file_url"]))
+			with open(post["file_url"].split("/")[-1].replace("%20", "_"),"wb") as pic:
+				pic.write(requests.get(post["file_url"]).content)
+			with open(post["file_url"].split("/")[-1].replace("%20", "_"),"rb") as pic:
+				bot.send_document(message.chat.id, pic)
 	except Except as i:
 		bot.send_message(message.chat.id, i)
 	except Exception as e:

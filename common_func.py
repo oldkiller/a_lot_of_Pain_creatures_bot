@@ -6,6 +6,8 @@ class Except(BaseException):
 	def __str__(self):
 		return self.mess
 
+# Захреначить все на регулярках, что ли?
+
 # def parse(req_str,bdict): 
 # 	try:
 # 		req_str=req_str.split()
