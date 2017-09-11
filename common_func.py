@@ -18,13 +18,19 @@ class PWR():
 				if re.search(bd[i],j):
 					rd[i].append(j)
 		self.rd=rd
-	
+
+	def __repr__(self):
+		return str(self.rd)
+
+	def __str__(self):
+		return str(self.rd)
+
 	def key(self):
 		return self.rd["key"]
-	
+
 	def req(self):
 		return self.rd["req"]
-	
+
 	def num(self):
 		return [int(i) for i in self.rd["num"]]
 

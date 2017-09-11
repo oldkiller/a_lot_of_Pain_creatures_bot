@@ -21,6 +21,12 @@ class PWR():
 					rd[i].append(j)
 		self.rd=rd
 	
+	def __repr__(self):
+		return str(self.rd)
+	
+	def __str__(self):
+		return str(self.rd)
+	
 	def key(self):
 		return self.rd["key"]
 	
