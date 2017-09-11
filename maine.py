@@ -66,8 +66,8 @@ def forecast(message):
 	for i in res:
 		bot.send_message(message.chat.id, i["dt_txt"]+" : "+weath_reply(i))
 
-@bot.message_handler(commands=["forecast2"])
-def forecast2(message):
+@bot.message_handler(commands=["forecasts"])
+def forecasts(message):
 	txt=PWR(message.text)
 	data=weath_req("forecast", txt.req()[0])
 	tlist=["00","03","06","09","12","15","18","21"]
