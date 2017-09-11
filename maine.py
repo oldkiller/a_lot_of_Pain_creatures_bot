@@ -57,19 +57,35 @@ def weather(message):
 
 @bot.message_handler(commands=["forecast"])
 def forecast(message):
-	pmes=parse(message.text, {"mess":1, "key":1, "city":0})
-	data=weath_req("forecast", pmes["city"])
+	print("start forecasts")
+	txt=PWR(message.text)
+	print(txt)
+	data=weath_req("forecast", txt.req()[0])
 	tlist=["00","03","06","09","12","15","18","21"]
 	tkey={"s":4, "m":2, "l":1}
-	#tkey=dict(s=4, m=2, l=1)
-	res=[i for i in data["list"] if i["dt_txt"][11:13] in tlist[::tkey[pmes["key"]]]]
-	for i in res:
-		bot.send_message(message.chat.id, i["dt_txt"]+" : "+weath_reply(i))
+	#req_key=txt.key()[0] if txt.key()[0] else "s"
+	req_key=tkey[txt.key()[0]] if txt.key()[0] else tkey["s"]
+	res=[i for i in data["list"] if i["dt_txt"][11:13] in tlist[::req_key]]
+	if txt.num():
+		for i in res[:txt.num()[0] * (8/req_key)]:
+			bot.send_message(message.chat.id, i["dt_txt"]+" : "+weath_reply(i))
+	else:
+		for i in res:
+			bot.send_message(message.chat.id, i["dt_txt"]+" : "+weath_reply(i))
+	# pmes=parse(message.text, {"mess":1, "key":1, "city":0})
+	# data=weath_req("forecast", pmes["city"])
+	# tlist=["00","03","06","09","12","15","18","21"]
+	# tkey={"s":4, "m":2, "l":1}
+	# #tkey=dict(s=4, m=2, l=1)
+	# res=[i for i in data["list"] if i["dt_txt"][11:13] in tlist[::tkey[pmes["key"]]]]
+	# for i in res:
+	# 	bot.send_message(message.chat.id, i["dt_txt"]+" : "+weath_reply(i))
 
 @bot.message_handler(commands=["forecasts"])
 def forecasts(message):
 	print("start forecasts")
 	txt=PWR(message.text)
+	print(txt)
 	data=weath_req("forecast", txt.req()[0])
 	tlist=["00","03","06","09","12","15","18","21"]
 	tkey={"s":4, "m":2, "l":1}
