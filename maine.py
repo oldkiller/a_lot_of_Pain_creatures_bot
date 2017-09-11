@@ -4,6 +4,7 @@ import datetime
 import telebot
 import pybooru
 import os
+import re
 from common_func import *
 from urllib.request import urlopen
 from flask import Flask, request
@@ -65,21 +66,37 @@ def forecast(message):
 	for i in res:
 		bot.send_message(message.chat.id, i["dt_txt"]+" : "+weath_reply(i))
 
+@bot.message_handler(commands=["forecast2"])
+def forecast2(message):
+	txt=PWR(message.text)
+	data=weath_req("forecast", txt.req()[0])
+	tlist=["00","03","06","09","12","15","18","21"]
+	tkey={"s":4, "m":2, "l":1}
+	#req_key=txt.key()[0] if txt.key()[0] else "s"
+	req_key=tkey[txt.key()[0]] if txt.key()[0] else tkey["s"]
+	res=[i for i in data["list"] if i["dt_txt"][11:13] in tlist[::req_key]]
+	if txt.num():
+		for i in res[:txt.num()[0] * (8/req_key)]:
+			bot.send_message(message.chat.id, i["dt_txt"]+" : "+weath_reply(i))
+	else:
+		for i in res:
+			bot.send_message(message.chat.id, i["dt_txt"]+" : "+weath_reply(i))
+
 ####################### Block responsible for pictures ########################
 @bot.message_handler(commands=["yandere"])
 def yandere(message):
 	try:
 		mess=parse(message.text, {"mess":1, "tag":0, "count":1})
-		if not mess: raise Except("Неполное тело запроса")
+		if not mess: 
+			raise Except("Неполное тело запроса")
 		booru=pybooru.Moebooru("yandere", hash_string=yan_api)
-		#booru=pybooru.Moebooru(mess["mess"][1:])#, hash_string=yan_api)
 		posts=booru.post_list(tags=mess["tag"], limit=int(mess["count"]))
-		if posts==[]: raise Except("Пост(ы) не найден(ы).")
+		if not posts: 
+			raise Except("Пост(ы) не найден(ы).")
 		for post in posts:
 			bot.send_photo(message.chat.id, urlopen(post["sample_url"]))
-			#bot.send_document(message.chat.id, urlopen(post["file_url"]))
 			with open(post["file_url"].split("/")[-1].replace("%20", "_"),"wb") as pic:
-				pic.write(requests.get(post["file_url"]).content)
+				pic.wrsite(requests.get(post["file_url"]).content)
 			with open(post["file_url"].split("/")[-1].replace("%20", "_"),"rb") as pic:
 				bot.send_document(message.chat.id, pic)
 	except Except as i:

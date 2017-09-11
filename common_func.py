@@ -7,6 +7,28 @@ class Except(BaseException):
 		return self.mess
 
 # Захреначить все на регулярках, что ли?
+# Спасибо RegEx, что прокачали мой код.
+class PWR():
+	def __init__(self,txt):
+		txt=txt.split()[1:]
+		bd=dict(key=r"^[a-z]{1}$", req=r"^([^0-9])([A-Za-z\-0-9]){1,}$", num=r"^([^A-Za-z])([0-9]){0,}$")
+		rd={i:[] for i in bd}
+		for i in bd:
+			for j in txt:
+				if re.search(bd[i],j):
+					rd[i].append(j)
+		self.rd=rd
+	
+	def key(self):
+		return self.rd["key"]
+	
+	def req(self):
+		return self.rd["req"]
+	
+	def num(self):
+		return [int(i) for i in self.rd["num"]]
+
+
 
 # def parse(req_str,bdict): 
 # 	try:
