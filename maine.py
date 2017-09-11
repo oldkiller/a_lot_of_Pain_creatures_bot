@@ -4,7 +4,6 @@ import datetime
 import telebot
 import pybooru
 import os
-import re
 from common_func import *
 from urllib.request import urlopen
 from flask import Flask, request
