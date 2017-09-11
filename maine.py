@@ -68,6 +68,7 @@ def forecast(message):
 
 @bot.message_handler(commands=["forecasts"])
 def forecasts(message):
+	print("start forecasts")
 	txt=PWR(message.text)
 	data=weath_req("forecast", txt.req()[0])
 	tlist=["00","03","06","09","12","15","18","21"]
