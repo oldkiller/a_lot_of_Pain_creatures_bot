@@ -65,7 +65,8 @@ def forecast(message):
 	req_key=tkey[txt.key()[0]] if txt.key()[0] else tkey["s"]
 	print(req_key)
 	res=[i for i in data["list"] if i["dt_txt"][11:13] in tlist[::req_key]]
-	print(txt.num(), "\n", (txt.num()[0] * (8/req_key)) )
+	#print(txt.num(), "\n", (txt.num()[0] * (8/req_key)) )
+	bot.send_message(message.chat.id, "suka")
 	if txt.num():
 		for i in res[:txt.num()[0] * (8/req_key)]:
 			bot.send_message(message.chat.id, i["dt_txt"]+" : "+weath_reply(i))
