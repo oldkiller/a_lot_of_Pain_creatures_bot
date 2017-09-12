@@ -67,12 +67,14 @@ def forecast(message):
 	res=[i for i in data["list"] if i["dt_txt"][11:13] in tlist[::req_key]]
 	#print(txt.num(), "\n", (txt.num()[0] * (8/req_key)) )
 	#bot.send_message(message.chat.id, type(txt.num()))
-	if True: #txt.num():
-		for i in res[:4]:#res[:txt.num()[0] * (8/req_key)]:
-			bot.send_message(message.chat.id, i["dt_txt"]+" : "+weath_reply(i))
-	else:
-		for i in res:
-			bot.send_message(message.chat.id, i["dt_txt"]+" : "+weath_reply(i))
+	for i in res:
+		bot.send_message(message.chat.id, i["dt_txt"]+" : "+weath_reply(i))
+	# if txt.num():
+	# 	for i in res[:txt.num()[0] * (8/req_key)]:
+	# 		bot.send_message(message.chat.id, i["dt_txt"]+" : "+weath_reply(i))
+	# else:
+	# 	for i in res:
+	# 		bot.send_message(message.chat.id, i["dt_txt"]+" : "+weath_reply(i))
 	# pmes=parse(message.text, {"mess":1, "key":1, "city":0})
 	# data=weath_req("forecast", pmes["city"])
 	# tlist=["00","03","06","09","12","15","18","21"]

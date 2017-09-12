@@ -28,13 +28,13 @@ class PWR():
 		return str(self.rd)
 
 	def key(self):
-		return self.rd["key"]
+		return self.rd["key"] if self.rd["key"] else None
 
 	def req(self):
-		return self.rd["req"]
+		return self.rd["req"] if self.rd["req"] else None
 
 	def num(self):
-		return [int(i) for i in self.rd["num"]]
+		return [int(i) for i in self.rd["num"]] if self.rd["num"] else None
 
 
 
