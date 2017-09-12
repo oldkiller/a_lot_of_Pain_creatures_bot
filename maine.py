@@ -116,7 +116,7 @@ def yandere(message):
 		for post in posts:
 			bot.send_photo(message.chat.id, urlopen(post["sample_url"]))
 			with open(post["file_url"].split("/")[-1].replace("%20", "_"),"wb") as pic:
-				pic.wrsite(requests.get(post["file_url"]).content)
+				pic.write(requests.get(post["file_url"]).content)
 			with open(post["file_url"].split("/")[-1].replace("%20", "_"),"rb") as pic:
 				bot.send_document(message.chat.id, pic)
 	except Except as i:
