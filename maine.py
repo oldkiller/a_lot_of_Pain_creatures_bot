@@ -50,8 +50,11 @@ def weath_reply(data, mess=""):
 
 @bot.message_handler(commands=['weather'])
 def weather(message):
-	pmes=parse(message.text, {"mess":1, "city":0})
-	data=weath_req("weather", pmes["city"])
+	# pmes=parse(message.text, {"mess":1, "city":0})
+	# data=weath_req("weather", pmes["city"])
+	# bot.send_message(message.chat.id,weath_reply(data))
+	pm=PWR(message.text)
+	data=weath_req("weather", pm.req()[0])
 	bot.send_message(message.chat.id,weath_reply(data))
 
 @bot.message_handler(commands=["forecast"])
@@ -63,7 +66,6 @@ def forecast(message):
 		tkey={"s":4, "m":2, "l":1}
 		req_key=tkey[txt.key()[0]] if txt.key() else tkey["s"]
 		res=[i for i in data["list"] if i["dt_txt"][11:13] in tlist[::req_key]]
-		bot.send_message(message.chat.id, "I`m ready")
 		if txt.num():
 			for i in res[:int(txt.num()[0]*(8/req_key))]:
 				bot.send_message(message.chat.id, i["dt_txt"]+" : "+weath_reply(i))
@@ -94,23 +96,19 @@ def yandere(message):
 		bot.send_message(message.chat.id, i)
 	except Exception as e:
 		bot.send_message(message.chat.id, e)
-  
-####################### Block responsible for music	###########################
-# https://developer.jamendo.com/v3.0
 
 ################################### DB ########################################
-@bot.message_handler(commands=["db"])
-def bds(message):
-	bot.send_message(message.chat.id, os.environ["DATABASE_URL"])
-	con=postgresql.open(os.environ["DATABASE_URL"])
-	con.execute("CREATE TABLE users (id SERIAL PRIMARY KEY, login CHAR(64)")
-	con.commit()
-	con.close()
-
-	bot.send_message(message.chat.id, os.environ["DATABASE_URL"])
+# @bot.message_handler(commands=["db"])
+# def bds(message):
+# 	bot.send_message(message.chat.id, os.environ["DATABASE_URL"])
+# 	con=postgresql.open(os.environ["DATABASE_URL"])
+# 	con.execute("CREATE TABLE users (id SERIAL PRIMARY KEY, login CHAR(64)")
+# 	con.commit()
+# 	con.close()
+# 	bot.send_message(message.chat.id, os.environ["DATABASE_URL"])
 
 ################################# Secret ######################################
-#TODO Ключи для рассписания: { n - now, d - day, t - tomorow, w - week, f - full }
+#Ключи для рассписания: {d - day, t - tomorow, w - week, f - full}
 @bot.message_handler(commands=["timetable"])
 def timetable(message):
 	try:
