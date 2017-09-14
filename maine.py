@@ -69,7 +69,7 @@ def forecast(message):
 		# 	bot.send_message(message.chat.id, i["dt_txt"]+" : "+weath_reply(i))
 		bot.send_message(message.chat.id, "I`m ready")
 		if txt.num():
-			for i in res[:txt.num()[0] * (8/req_key)]:
+			for i in res[:int(txt.num()[0]*(8/req_key))]:
 				bot.send_message(message.chat.id, i["dt_txt"]+" : "+weath_reply(i))
 		else:
 			for i in res:
