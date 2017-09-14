@@ -19,6 +19,8 @@ class PWR():
 			for j in txt:
 				if re.search(bd[i],j):
 					rd[i].append(j)
+		if not rd["req"]:
+			Except("Пустое тело запроса.")
 		self.rd=rd
 
 	def __repr__(self):

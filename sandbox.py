@@ -1,7 +1,7 @@
 import requests
 import telebot
 import re
-from common_func import *
+
 
 bot = telebot.TeleBot("317266897:AAGxt_oKV19_LG_S-xbcTH26eb8ZDGD06Fs")
 
@@ -47,9 +47,15 @@ class PWR():
 @bot.message_handler(commands=["rex"])
 def rex(message):
 	pm=PWR(message.text)
-	for _ in range(5):
+	bot.send_message(message.chat.id, "key")
+	if pm.key():
 		bot.send_message(message.chat.id, pm.key())
+	bot.send_message(message.chat.id, "num")
+	if pm.num():
 		bot.send_message(message.chat.id, pm.num())
+	bot.send_message(message.chat.id, "req")
+	if pm.req():
+		bot.send_message(message.chat.id, pm.req())
 
 
 if __name__=="__main__":

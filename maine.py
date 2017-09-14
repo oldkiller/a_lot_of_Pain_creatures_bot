@@ -56,33 +56,37 @@ def weather(message):
 
 @bot.message_handler(commands=["forecast"])
 def forecast(message):
-	print("start forecasts")
-	txt=PWR(message.text)
-	print(txt)
-	data=weath_req("forecast", txt.req()[0])
-	tlist=["00","03","06","09","12","15","18","21"]
-	tkey={"s":4, "m":2, "l":1}
-	req_key=tkey[txt.key()[0]] if txt.key()[0] else tkey["s"]
-	print(req_key)
-	res=[i for i in data["list"] if i["dt_txt"][11:13] in tlist[::req_key]]
-	#print(txt.num(), "\n", (txt.num()[0] * (8/req_key)) )
-	#bot.send_message(message.chat.id, type(txt.num()))
-	for i in res:
-		bot.send_message(message.chat.id, i["dt_txt"]+" : "+weath_reply(i))
-	# if txt.num():
-	# 	for i in res[:txt.num()[0] * (8/req_key)]:
-	# 		bot.send_message(message.chat.id, i["dt_txt"]+" : "+weath_reply(i))
-	# else:
-	# 	for i in res:
-	# 		bot.send_message(message.chat.id, i["dt_txt"]+" : "+weath_reply(i))
-	# pmes=parse(message.text, {"mess":1, "key":1, "city":0})
-	# data=weath_req("forecast", pmes["city"])
-	# tlist=["00","03","06","09","12","15","18","21"]
-	# tkey={"s":4, "m":2, "l":1}
-	# #tkey=dict(s=4, m=2, l=1)
-	# res=[i for i in data["list"] if i["dt_txt"][11:13] in tlist[::tkey[pmes["key"]]]]
-	# for i in res:
-	# 	bot.send_message(message.chat.id, i["dt_txt"]+" : "+weath_reply(i))
+	try:
+		print("start forecasts")
+		txt=PWR(message.text)
+		print(txt)
+		data=weath_req("forecast", txt.req()[0])
+		tlist=["00","03","06","09","12","15","18","21"]
+		tkey={"s":4, "m":2, "l":1}
+		req_key=tkey[txt.key()[0]] if txt.key() else tkey["s"]
+		print(req_key)
+		res=[i for i in data["list"] if i["dt_txt"][11:13] in tlist[::req_key]]
+		#print(txt.num(), "\n", (txt.num()[0] * (8/req_key)) )
+		#bot.send_message(message.chat.id, type(txt.num()))
+		for i in res:
+			bot.send_message(message.chat.id, i["dt_txt"]+" : "+weath_reply(i))
+		# if txt.num():
+		# 	for i in res[:txt.num()[0] * (8/req_key)]:
+		# 		bot.send_message(message.chat.id, i["dt_txt"]+" : "+weath_reply(i))
+		# else:
+		# 	for i in res:
+		# 		bot.send_message(message.chat.id, i["dt_txt"]+" : "+weath_reply(i))
+		# pmes=parse(message.text, {"mess":1, "key":1, "city":0})
+		# data=weath_req("forecast", pmes["city"])
+		# tlist=["00","03","06","09","12","15","18","21"]
+		# tkey={"s":4, "m":2, "l":1}
+		# #tkey=dict(s=4, m=2, l=1)
+		# res=[i for i in data["list"] if i["dt_txt"][11:13] in tlist[::tkey[pmes["key"]]]]
+		# for i in res:
+		# 	bot.send_message(message.chat.id, i["dt_txt"]+" : "+weath_reply(i))
+	except Exception as e:
+		bot.send_message(message.chat.id, "Fucking kenguru")
+		bot.send_message(message.chat.id, e)
 
 @bot.message_handler(commands=["forecasts"])
 def forecasts(message):
