@@ -126,6 +126,7 @@ def timetable2(message):
 		if day>6: day=1
 		week=requests.get(api_link+"weeks").json()["data"]
 		pm=PWR(message.text)
+		bot.send_message(message.chat.id, "-".join(["dd",pm.key(),pm.req(),pm.num()]))
 		tt=requests.get(api_link+f"groups/{pm.req()[0]}/lessons").json()
 		key={"d":[[day],[week]], "t":[[day+1],[week]], "w":[range(1,7),[week]], "f":[range(1,7),[1,2]]}
 		ntt=[i for i in tt["data"] if int(i["day_number"]) in key[pm.key()[0]][0] and int(i["lesson_week"]) in key[pm.key()[0]][1] ]
