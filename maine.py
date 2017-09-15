@@ -1,9 +1,9 @@
 import postgresql
 import requests
-import datetime
 import telebot
 import pybooru
 import os
+from datetime import datetime,timezone,timedelta
 from common_func import *
 from urllib.request import urlopen
 from flask import Flask, request
@@ -122,14 +122,15 @@ def timetable(message):
 def timetable2(message):
 	try:
 		api_link="https://api.rozklad.org.ua/v2/"
-		day=datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=3))).isoweekday()
+		day=datetime.now(timezone(timedelta(hours=3))).isoweekday()
 		if day>6: day=1
 		week=requests.get(api_link+"weeks").json()["data"]
 		pm=PWR(message.text)
-		bot.send_message(message.chat.id, "-".join(["dd",pm.req()]))
+		bot.send_message(message.chat.id, "-".join(["dd",week,day ]))
 		tt=requests.get(api_link+f"groups/{pm.req()[0]}/lessons").json()
 		key={"d":[[day],[week]], "t":[[day+1],[week]], "w":[range(1,7),[week]], "f":[range(1,7),[1,2]]}
 		ntt=[i for i in tt["data"] if int(i["day_number"]) in key[pm.key()[0]][0] and int(i["lesson_week"]) in key[pm.key()[0]][1] ]
+		
 		if not ntt:
 			bot.send_message(message.chat.id, "Похоже, день свободен")
 		for i in ntt:
