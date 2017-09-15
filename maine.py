@@ -126,17 +126,19 @@ def timetable2(message):
 		if day>6: day=1
 		week=requests.get(api_link+"weeks").json()["data"]
 		pm=PWR(message.text)
-		bot.send_message(message.chat.id, "-".join(["dd",week,day ]))
 		tt=requests.get(api_link+f"groups/{pm.req()[0]}/lessons").json()
 		key={"d":[[day],[week]], "t":[[day+1],[week]], "w":[range(1,7),[week]], "f":[range(1,7),[1,2]]}
-		ntt=[i for i in tt["data"] if int(i["day_number"]) in key[pm.key()[0]][0] and int(i["lesson_week"]) in key[pm.key()[0]][1] ]
-		
-		if not ntt:
-			bot.send_message(message.chat.id, "Похоже, день свободен")
-		for i in ntt:
-			mes =i["lesson_number"]+" "+f"{i['time_start'][:6]}-{i['time_end'][:6]}\n"
-			mes+=i["lesson_name"]+"\n"+i["teacher_name"]+" "+i["teacher_rating"]
-			mes+=i["lesson_type"]+" "+i["lesson_room"]
+		for k in pm.key():
+			dn,lw="day_number","lesson_week"
+			ntt=[i for i in tt["data"] if int(i[dn]) in key[k][0] and int(i[lw]) in key[k][1]]
+			if not ntt:
+				bot.send_message(message.chat.id, "Похоже, день свободен")
+			for i in ntt:
+				mes =i["lesson_number"]+" "
+				mes+=f"{i['time_start'][:5]}-{i['time_end'][:5]}\n"
+				mes+=i["lesson_name"]+"\n"+i["teacher_name"]+" "#+i["teacher_rating"]
+				mes+=i["lesson_type"]+" "+i["lesson_room"]
+				bot.send_message(message.chat.id, mes)
 	except Exception as e:
 		bot.send_message(message.chat.id, e)
 	# try:

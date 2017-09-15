@@ -1,7 +1,7 @@
 import requests
 import telebot
 import re
-
+from datetime import datetime,timezone,timedelta
 
 bot = telebot.TeleBot("317266897:AAGxt_oKV19_LG_S-xbcTH26eb8ZDGD06Fs")
 
@@ -35,14 +35,6 @@ class PWR():
 	
 	def num(self):
 		return [int(i) for i in self.rd["num"]]
-# def parse_rex(txt,sep="_",**bd):
-# 	txt=txt.split()[1:]
-# 	rbd={i:[] for i in bd}
-# 	for i in bd:
-# 		for j in txt:
-# 			if re.search(bd[i],j):
-# 				rbd[i].append(j)
-# 	return rbd
 
 @bot.message_handler(commands=["rex"])
 def rex(message):
