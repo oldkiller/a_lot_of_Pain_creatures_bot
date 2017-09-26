@@ -64,8 +64,7 @@ def forecast(message):
 		data=weath_req("forecast", txt.req()[0])
 		tlist=["00","03","06","09","12","15","18","21"]
 		tkey={"s":4, "m":2, "l":1}
-		#req_key=tkey[txt.key()[0]] if txt.key() else tkey["s"]
-		req_key=tkey[txt.key(["s"])]
+		req_key=tkey[txt.key()[0]] if txt.key() else tkey["s"]
 		res=[i for i in data["list"] if i["dt_txt"][11:13] in tlist[::req_key]]
 		if txt.num():
 			for i in res[:int(txt.num()[0]*(8/req_key))]:
@@ -138,11 +137,11 @@ def timetable(message):
 			if not ntt:
 				bot.send_message(message.chat.id, "Похоже, день свободен")
 			for i in ntt:
-				mes =i["day_name"]+i["lesson_number"]+" "
+				mes =i["day_name"]+" "+i["lesson_number"]+" "
 				mes+=f"{i['time_start'][:5]}-{i['time_end'][:5]}\n"
 				mes+=i["lesson_name"]+"\n"+i["teacher_name"]+" "
 				mes+=i["lesson_type"]+" "+i["lesson_room"]
-				try: mes+=i["teacher_rating"]
+				try: mes+=i["teachers"][0]["teacher_rating"]
 				except: pass
 				bot.send_message(message.chat.id, mes)
 	except Exception as e:
