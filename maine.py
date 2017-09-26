@@ -11,6 +11,7 @@ from flask import Flask, request
 tele_api = "426351504:AAHomR1jc-m2B7iabRnOFR8OkPTKlkWMIdw"
 weath_token = "795819f679706a61cd7938b26ac247af"
 yan_api = "r5oUMfysc4C566kI312u_A"
+translate = "trnsl.1.1.20170926T012014Z.3f5cb4c22d376499.4dc04c7f837aa68cb2ca57420651ba47d1548711"
 
 bot = telebot.TeleBot(tele_api)
 
@@ -141,7 +142,7 @@ def timetable(message):
 				mes+=f"{i['time_start'][:5]}-{i['time_end'][:5]}\n"
 				mes+=i["lesson_name"]+"\n"+i["teacher_name"]+" "
 				mes+=i["lesson_type"]+" "+i["lesson_room"]
-				try: mes+=i["teachers"][0]["teacher_rating"]
+				try: mes+=" R:"+i["teachers"][0]["teacher_rating"]
 				except: pass
 				bot.send_message(message.chat.id, mes)
 	except Exception as e:
