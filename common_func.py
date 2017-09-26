@@ -19,8 +19,8 @@ class PWR():
 			for j in txt:
 				if re.search(bd[i],j):
 					rd[i].append(j)
-		if not rd["req"]:
-			Except("Пустое тело запроса.")
+		# if not rd["req"]:
+		# 	Except("Пустое тело запроса.")
 		self.rd=rd
 
 	def __repr__(self):
@@ -29,8 +29,11 @@ class PWR():
 	def __str__(self):
 		return str(self.rd)
 
-	def key(self):
-		return self.rd["key"] if self.rd["key"] else None
+	def __bool__(self):
+		return bool(self.rd["key"] or self.rd["req"] or self.rd["num"])
+
+	def key(self,default=None):
+		return self.rd["key"] if self.rd["key"] else default
 
 	def req(self):
 		return self.rd["req"] if self.rd["req"] else None

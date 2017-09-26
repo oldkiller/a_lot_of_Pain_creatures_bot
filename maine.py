@@ -22,9 +22,12 @@ def start(message):
 def helps(message):
 	help_mess="""
 	/weather <city> - Узнать погоду в <city>
-	/forecast <key> <city> - Узнать прогноз погоды в <city>, <key> - может принимать значения s,m,l
-	/yandere <tag> <count> - Поиск изображений на yande.re, <tag> - теги для поиска, <count> - количество
-	/timetable <group> - <group> - група, для которой берется рассписание
+	/forecast <key> <city> - Узнать прогноз погоды в <city>, 
+	<key> - может принимать значения s,m,l
+	/yandere <tag> <count> - Поиск изображений на yande.re, 
+	<tag> - теги для поиска, <count> - количество
+	/timetable <key> <group> - <group> - група, для которой берется рассписание
+	Ключи для рассписания: {d - day, t - tomorow, w - week, f - full}
 	help is coming
 	"""
 	bot.send_message(message.chat.id, help_mess)
@@ -61,7 +64,8 @@ def forecast(message):
 		data=weath_req("forecast", txt.req()[0])
 		tlist=["00","03","06","09","12","15","18","21"]
 		tkey={"s":4, "m":2, "l":1}
-		req_key=tkey[txt.key()[0]] if txt.key() else tkey["s"]
+		#req_key=tkey[txt.key()[0]] if txt.key() else tkey["s"]
+		req_key=tkey[txt.key(["s"])]
 		res=[i for i in data["list"] if i["dt_txt"][11:13] in tlist[::req_key]]
 		if txt.num():
 			for i in res[:int(txt.num()[0]*(8/req_key))]:
@@ -99,27 +103,27 @@ def yandere(message):
 
 ################################# Secret ######################################
 #Ключи для рассписания: {d - day, t - tomorow, w - week, f - full}
+# @bot.message_handler(commands=["timetable"])
+# def timetable(message):
+# 	try:
+# 		mess=parse(message.text, {"mess":1, "group":1})
+# 		day=datetime.datetime.now().isoweekday()
+# 		if day>6: day=1
+# 		week=requests.get("https://api.rozklad.org.ua/v2/weeks").json()["data"]
+# 		tt=requests.get(f"https://api.rozklad.org.ua/v2/groups/{mess['group']}/lessons").json()
+# 		ntt=[i for i in tt["data"] if i["day_number"]==str(day) and i["lesson_week"]==str(week)]
+# 		if not ntt:
+# 			bot.send_message(message.chat.id, "Похоже, день свободен")
+# 		for i in ntt:
+# 			mes =i["lesson_number"]+" "+f"{i['time_start']}-{i['time_end']}\n"
+# 			mes+=i["lesson_name"]+"\n"+i["teacher_name"]+"\n"
+# 			mes+=i["lesson_type"]+" "+i["lesson_room"]
+# 			bot.send_message(message.chat.id, mes)
+# 	except Exception as e:
+# 		bot.send_message(message.chat.id, e)
+
 @bot.message_handler(commands=["timetable"])
 def timetable(message):
-	try:
-		mess=parse(message.text, {"mess":1, "group":1})
-		day=datetime.datetime.now().isoweekday()
-		if day>6: day=1
-		week=requests.get("https://api.rozklad.org.ua/v2/weeks").json()["data"]
-		tt=requests.get(f"https://api.rozklad.org.ua/v2/groups/{mess['group']}/lessons").json()
-		ntt=[i for i in tt["data"] if i["day_number"]==str(day) and i["lesson_week"]==str(week)]
-		if not ntt:
-			bot.send_message(message.chat.id, "Похоже, день свободен")
-		for i in ntt:
-			mes =i["lesson_number"]+" "+f"{i['time_start']}-{i['time_end']}\n"
-			mes+=i["lesson_name"]+"\n"+i["teacher_name"]+"\n"
-			mes+=i["lesson_type"]+" "+i["lesson_room"]
-			bot.send_message(message.chat.id, mes)
-	except Exception as e:
-		bot.send_message(message.chat.id, e)
-
-@bot.message_handler(commands=["timetable2"])
-def timetable2(message):
 	try:
 		api_link="https://api.rozklad.org.ua/v2/"
 		day=datetime.now(timezone(timedelta(hours=3))).isoweekday()
@@ -134,10 +138,12 @@ def timetable2(message):
 			if not ntt:
 				bot.send_message(message.chat.id, "Похоже, день свободен")
 			for i in ntt:
-				mes =i["lesson_number"]+" "
+				mes =i["day_name"]+i["lesson_number"]+" "
 				mes+=f"{i['time_start'][:5]}-{i['time_end'][:5]}\n"
-				mes+=i["lesson_name"]+"\n"+i["teacher_name"]+" "#+i["teacher_rating"]
+				mes+=i["lesson_name"]+"\n"+i["teacher_name"]+" "
 				mes+=i["lesson_type"]+" "+i["lesson_room"]
+				try: mes+=i["teacher_rating"]
+				except: pass
 				bot.send_message(message.chat.id, mes)
 	except Exception as e:
 		bot.send_message(message.chat.id, e)

@@ -26,7 +26,10 @@ class PWR():
 	
 	def __str__(self):
 		return str(self.rd)
-	
+
+	def __bool__(self):
+		return bool(self.rd["key"] or self.rd["req"] or self.rd["num"])
+
 	def key(self):
 		return self.rd["key"]
 	
@@ -39,15 +42,16 @@ class PWR():
 @bot.message_handler(commands=["rex"])
 def rex(message):
 	pm=PWR(message.text)
-	bot.send_message(message.chat.id, "key")
-	if pm.key():
-		bot.send_message(message.chat.id, pm.key())
-	bot.send_message(message.chat.id, "num")
-	if pm.num():
-		bot.send_message(message.chat.id, pm.num())
-	bot.send_message(message.chat.id, "req")
-	if pm.req():
-		bot.send_message(message.chat.id, pm.req())
+	bot.send_message(message.chat.id, bool(pm))
+	# bot.send_message(message.chat.id, "key")
+	# if pm.key():
+	# 	bot.send_message(message.chat.id, pm.key())
+	# bot.send_message(message.chat.id, "num")
+	# if pm.num():
+	# 	bot.send_message(message.chat.id, pm.num())
+	# bot.send_message(message.chat.id, "req")
+	# if pm.req():
+	# 	bot.send_message(message.chat.id, pm.req())
 
 
 if __name__=="__main__":
