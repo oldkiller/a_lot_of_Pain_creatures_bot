@@ -172,12 +172,15 @@ def timetable(message):
 
 @bot.message_handler(commands=["trans"])
 def trans(message):
-	pm=PWR(message.text)
-	text=" ".join(pm.req())
-	lang="-".join(pm.key())
-	api_link="https://translate.yandex.net/api/v1.5/tr.json/translate"
-	req=requests.get(api_link,params=dict(lang=lang,text=text,key=translate))
-	bot.send_message(message.chat.id, str(req.keys() ) ) 
+	try:
+		pm=PWR(message.text)
+		text=" ".join(pm.req())
+		lang="-".join(pm.key())
+		api_link="https://translate.yandex.net/api/v1.5/tr.json/translate"
+		req=requests.get(api_link,params=dict(lang=lang,text=text,key=translate))
+		bot.send_message(message.chat.id, str(req.keys() ) ) 
+	except Exception as e:
+		bot.send_message(message.chat.id, e) 
 
 ####################### Block responsible for webhooks ########################
 server = Flask(__name__)
