@@ -62,18 +62,19 @@ def weather(message):
 def forecast(message):
 	try:
 		txt=PWR(message.text)
-		data=weath_req("forecast", txt.req()[0])
+		data=weath_req("forecast", txt.freq())
 		tlist=["00","03","06","09","12","15","18","21"]
 		tkey={"s":4, "m":2, "l":1}
-		#req_key=tkey[txt.key()[0]] if txt.key() else tkey["s"]
-		req_key=tkey[txt.key("s")[0]]
+		req_key=tkey[txt.fkey("s")]
 		res=[i for i in data["list"] if i["dt_txt"][11:13] in tlist[::req_key]]
-		if txt.num():
-			for i in res[:int(txt.num()[0]*(8/req_key))]:
+		for i in res[:int(txt.fnum(5)*(8/req_key))]:
 				bot.send_message(message.chat.id, i["dt_txt"]+" : "+weath_reply(i))
-		else:
-			for i in res:
-				bot.send_message(message.chat.id, i["dt_txt"]+" : "+weath_reply(i))
+		# if txt.num():
+		# 	for i in res[:int(txt.fnum(5)*(8/req_key))]:
+		# 		bot.send_message(message.chat.id, i["dt_txt"]+" : "+weath_reply(i))
+		# else:
+		# 	for i in res:
+		# 		bot.send_message(message.chat.id, i["dt_txt"]+" : "+weath_reply(i))
 	except Exception as e:
 		bot.send_message(message.chat.id, e)
 

@@ -13,7 +13,7 @@ class Except(BaseException):
 class PWR():
 	def __init__(self,txt):
 		txt=txt.split()[1:]
-		bd=dict(key=r"^[a-z]{1}$", req=r"^([^0-9])([A-Za-z\-0-9]){1,}$", num=r"^([^A-Za-z])([0-9]){0,}$")
+		bd=dict(key=r"^[a-z]{1,2}$", req=r"^([^0-9])([A-Za-z\-0-9]){2,}$", num=r"^([^A-Za-z])([0-9]){0,}$")
 		rd={i:[] for i in bd}
 		for i in bd:
 			for j in txt:
@@ -32,16 +32,25 @@ class PWR():
 	def __bool__(self):
 		return bool(self.rd["key"] or self.rd["req"] or self.rd["num"])
 
-	def key(self,defaul=None):
-		return self.rd["key"] if self.rd["key"] else [defaul]
+	def key(self,default=None):
+		return self.rd["key"] if self.rd["key"] else [default]
 
-	def req(self):
-		return self.rd["req"] if self.rd["req"] else None
+	def req(self,default=None):
+		return self.rd["req"] if self.rd["req"] else [default]
 
-	def num(self):
-		return [int(i) for i in self.rd["num"]] if self.rd["num"] else None
+	def num(self,default=None):
+		return [int(i) for i in self.rd["num"]] if self.rd["num"] else [default]
+	
+	def fkey(self,default=None):
+		return self.rd["key"][0] if self.rd["key"] else default
 
+	def freq(self,default=None):
+		return self.rd["req"][0] if self.rd["req"] else default
 
+	def fnum(self,default=None):
+		return int(self.rd["num"][0]) if self.rd["num"] else default
+
+################################################################################
 
 # def parse(req_str,bdict): 
 # 	try:

@@ -13,7 +13,7 @@ bot = telebot.TeleBot("317266897:AAGxt_oKV19_LG_S-xbcTH26eb8ZDGD06Fs")
 class PWR():
 	def __init__(self,txt):
 		txt=txt.split()[1:]
-		bd=dict(key=r"^[a-z]{1}$", req=r"^([^0-9])([A-Za-z\-0-9]){1,}$", num=r"^([^A-Za-z])([0-9]){0,}$")
+		bd=dict(key=r"^[a-z]{1,2}$", req=r"^([^0-9])([A-Za-z\-0-9]){2,}$", num=r"^([^A-Za-z])([0-9]){0,}$")
 		rd={i:[] for i in bd}
 		for i in bd:
 			for j in txt:
@@ -42,16 +42,16 @@ class PWR():
 @bot.message_handler(commands=["rex"])
 def rex(message):
 	pm=PWR(message.text)
-	bot.send_message(message.chat.id, bool(pm))
-	# bot.send_message(message.chat.id, "key")
-	# if pm.key():
-	# 	bot.send_message(message.chat.id, pm.key())
-	# bot.send_message(message.chat.id, "num")
-	# if pm.num():
-	# 	bot.send_message(message.chat.id, pm.num())
-	# bot.send_message(message.chat.id, "req")
-	# if pm.req():
-	# 	bot.send_message(message.chat.id, pm.req())
+	# bot.send_message(message.chat.id, bool(pm))
+	bot.send_message(message.chat.id, "key")
+	if pm.key():
+		bot.send_message(message.chat.id, str(pm.key()))
+	bot.send_message(message.chat.id, "num")
+	if pm.num():
+		bot.send_message(message.chat.id, str(pm.num()))
+	bot.send_message(message.chat.id, "req")
+	if pm.req():
+		bot.send_message(message.chat.id, str(pm.req()))
 
 
 if __name__=="__main__":
