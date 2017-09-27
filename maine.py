@@ -65,7 +65,8 @@ def forecast(message):
 		data=weath_req("forecast", txt.req()[0])
 		tlist=["00","03","06","09","12","15","18","21"]
 		tkey={"s":4, "m":2, "l":1}
-		req_key=tkey[txt.key()[0]] if txt.key() else tkey["s"]
+		#req_key=tkey[txt.key()[0]] if txt.key() else tkey["s"]
+		req_key=tkey[txt.key("s")]
 		res=[i for i in data["list"] if i["dt_txt"][11:13] in tlist[::req_key]]
 		if txt.num():
 			for i in res[:int(txt.num()[0]*(8/req_key))]:
@@ -167,6 +168,14 @@ def timetable(message):
 
 # TODO Ключи по умолчанию.
 # TODO переводчика добавить
+
+@bot.message_handler(commands=["trans"])
+def trans(message):
+	pm=PWR(message.text)
+	text=" ".join(pm.req()[1:])
+	lang=pm.req()[0]
+	req=requests.get()
+
 ####################### Block responsible for webhooks ########################
 server = Flask(__name__)
 

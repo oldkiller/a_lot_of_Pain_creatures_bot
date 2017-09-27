@@ -33,7 +33,7 @@ class PWR():
 		return bool(self.rd["key"] or self.rd["req"] or self.rd["num"])
 
 	def key(self,default=None):
-		return self.rd["key"] if self.rd["key"] else default
+		return self.rd["key"] if self.rd["key"] else [default]
 
 	def req(self):
 		return self.rd["req"] if self.rd["req"] else None
