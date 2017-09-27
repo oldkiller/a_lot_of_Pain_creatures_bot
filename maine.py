@@ -35,40 +35,42 @@ def helps(message):
 
 ################## Block responsible for weather requests #####################
 def weath_req(types,city):
-	try:
-		req=f"http://api.openweathermap.org/data/2.5/{types}"
-		param={"q":city,"units":"metric","lang":"ru","APPID":weath_token}
-		data=requests.get(req, params=param).json()
-		return data
-	except Exception as e:
-		bot.send_message(message.chat.id, e)
+	req=f"http://api.openweathermap.org/data/2.5/{types}"
+	param={"q":city,"units":"metric","lang":"ru","APPID":weath_token}
+	data=requests.get(req, params=param).json()
+	return data
 
 def weath_reply(data, mess=""):
 	tostr = lambda i: "{0:+3.0f}".format(i)
-	mess += data['weather'][0]['description'].capitalize()+", "
+	mess += data["weather"][0]["description"].capitalize()+", "
 	mess += tostr(data["main"]["temp"])+"°C, "
 	mess += "влажность: "+tostr(data["main"]["humidity"])+"%, "
 	mess += "cкорость ветра: "+tostr(data["wind"]["speed"])+"м/с, "
 	mess += "облачность: "+tostr(data["clouds"]["all"])+"%"
 	return mess
 
-@bot.message_handler(commands=['weather'])
+@bot.message_handler(commands=["weather"])
 def weather(message):
-	pm=PWR(message.text)
-	data=weath_req("weather", pm.req()[0])
-	bot.send_message(message.chat.id,weath_reply(data))
+	try:
+		pm=PWR(message.text)
+		if not txt: Except("Неполное тело запроса")
+		data=weath_req("weather", pm.freq())
+		bot.send_message(message.chat.id,weath_reply(data))
+	except Exception as e:
+		bot.send_message(message.chat.id, e)
 
 @bot.message_handler(commands=["forecast"])
 def forecast(message):
 	try:
 		txt=PWR(message.text)
+		if not txt: Except("Неполное тело запроса")
 		data=weath_req("forecast", txt.freq())
 		tlist=["00","03","06","09","12","15","18","21"]
 		tkey={"s":4, "m":2, "l":1}
 		req_key=tkey[txt.fkey("s")]
 		res=[i for i in data["list"] if i["dt_txt"][11:13] in tlist[::req_key]]
 		for i in res[:int(txt.fnum(5)*(8/req_key))]:
-				bot.send_message(message.chat.id, i["dt_txt"]+" : "+weath_reply(i))
+			bot.send_message(message.chat.id, i["dt_txt"]+" : "+weath_reply(i))
 		# if txt.num():
 		# 	for i in res[:int(txt.fnum(5)*(8/req_key))]:
 		# 		bot.send_message(message.chat.id, i["dt_txt"]+" : "+weath_reply(i))
@@ -91,9 +93,9 @@ def yandere(message):
 			raise Except("Пост(ы) не найден(ы).")
 		for post in posts:
 			bot.send_photo(message.chat.id, urlopen(post["sample_url"]))
-			with open(post["file_url"].split("/")[-1].replace("%20", "_"),"wb") as pic:
+			with open(post["file_url"].split("/")[-1],"wb") as pic:
 				pic.write(requests.get(post["file_url"]).content)
-			with open(post["file_url"].split("/")[-1].replace("%20", "_"),"rb") as pic:
+			with open(post["file_url"].split("/")[-1],"rb") as pic:#.replace("%20", "_")
 				bot.send_document(message.chat.id, pic)
 	except Except as i:
 		bot.send_message(message.chat.id, i)
@@ -144,8 +146,9 @@ def timetable(message):
 				mes+=f"{i['time_start'][:5]}-{i['time_end'][:5]}\n"
 				mes+=i["lesson_name"]+"\n"+i["teacher_name"]+" "
 				mes+=i["lesson_type"]+" "+i["lesson_room"]
-				try: mes+=" R:"+i["teachers"][0]["teacher_rating"]
-				except: pass
+				if i["teachers"]: mes+=" R:"+i["teachers"][0]["teacher_rating"]
+				# try: mes+=" R:"+i["teachers"][0]["teacher_rating"]
+				# except: pass
 				bot.send_message(message.chat.id, mes)
 	except Exception as e:
 		bot.send_message(message.chat.id, e)
