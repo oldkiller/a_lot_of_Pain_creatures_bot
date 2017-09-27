@@ -84,21 +84,18 @@ def forecast(message):
 @bot.message_handler(commands=["yandere"])
 def yandere(message):
 	try:
-		mess=parse(message.text, {"mess":1, "tag":0, "count":1})
-		if not mess: 
-			raise Except("Неполное тело запроса")
+		mess=PWR(message.text)
+		if not mess: raise Except("Неполное тело запроса")
 		booru=pybooru.Moebooru("yandere", hash_string=yan_api)
-		posts=booru.post_list(tags=mess["tag"], limit=int(mess["count"]))
-		if not posts: 
-			raise Except("Пост(ы) не найден(ы).")
+		posts=booru.post_list(tags="_".join(mess.req()), limit=mess.fnum())
+		if not posts: raise Except("Пост(ы) не найден(ы).")
 		for post in posts:
 			bot.send_photo(message.chat.id, urlopen(post["sample_url"]))
-			with open(post["file_url"].split("/")[-1],"wb") as pic:
+			name_file=post["file_url"].split("/")[-1].replace("%20", "_")
+			with open(name_file,"wb") as pic:
 				pic.write(requests.get(post["file_url"]).content)
-			with open(post["file_url"].split("/")[-1],"rb") as pic:#.replace("%20", "_")
+			with open(name_file,"rb") as pic:
 				bot.send_document(message.chat.id, pic)
-	except Except as i:
-		bot.send_message(message.chat.id, i)
 	except Exception as e:
 		bot.send_message(message.chat.id, e)
 
@@ -134,7 +131,7 @@ def timetable(message):
 		if day>6: day=1
 		week=requests.get(api_link+"weeks").json()["data"]
 		pm=PWR(message.text)
-		tt=requests.get(api_link+f"groups/{pm.req()[0]}/lessons").json()
+		tt=requests.get(api_link+f"groups/{pm.freq()}/lessons").json()
 		key={"d":[[day],[week]], "t":[[day+1],[week]], "w":[range(1,7),[week]], "f":[range(1,7),[1,2]]}
 		for k in pm.key():
 			dn,lw="day_number","lesson_week"
@@ -176,9 +173,11 @@ def timetable(message):
 @bot.message_handler(commands=["trans"])
 def trans(message):
 	pm=PWR(message.text)
-	text=" ".join(pm.req()[1:])
-	lang=pm.req()[0]
-	req=requests.get()
+	text=" ".join(pm.req())
+	lang="-".join(pm.key())
+	api_link="https://translate.yandex.net/api/v1.5/tr.json/translate"
+	req=requests.get(api_link,params=dict(lang=lang,text=text,key=translate))
+	bot.send_message(message.chat.id, str(req.keys() ) ) 
 
 ####################### Block responsible for webhooks ########################
 server = Flask(__name__)
