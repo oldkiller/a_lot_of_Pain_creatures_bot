@@ -178,7 +178,7 @@ def trans(message):
 		lang="-".join(pm.key())
 		api_link="https://translate.yandex.net/api/v1.5/tr.json/translate"
 		req=requests.get(api_link,params=dict(lang=lang,text=text,key=translate)).json()
-		bot.send_message(message.chat.id, str(req.keys() ) ) 
+		bot.send_message(message.chat.id, str(req["text"] ) ) 
 	except Exception as e:
 		bot.send_message(message.chat.id, e) 
 
