@@ -71,12 +71,6 @@ def forecast(message):
 		res=[i for i in data["list"] if i["dt_txt"][11:13] in tlist[::req_key]]
 		for i in res[:int(txt.fnum(5)*(8/req_key))]:
 			bot.send_message(message.chat.id, i["dt_txt"]+" : "+weath_reply(i))
-		# if txt.num():
-		# 	for i in res[:int(txt.fnum(5)*(8/req_key))]:
-		# 		bot.send_message(message.chat.id, i["dt_txt"]+" : "+weath_reply(i))
-		# else:
-		# 	for i in res:
-		# 		bot.send_message(message.chat.id, i["dt_txt"]+" : "+weath_reply(i))
 	except Exception as e:
 		bot.send_message(message.chat.id, e)
 
@@ -102,27 +96,7 @@ def yandere(message):
 ################################### DB ########################################
 #On next episode...
 
-################################# Secret ######################################
-#Ключи для рассписания: {d - day, t - tomorow, w - week, f - full}
-# @bot.message_handler(commands=["timetable"])
-# def timetable(message):
-# 	try:
-# 		mess=parse(message.text, {"mess":1, "group":1})
-# 		day=datetime.datetime.now().isoweekday()
-# 		if day>6: day=1
-# 		week=requests.get("https://api.rozklad.org.ua/v2/weeks").json()["data"]
-# 		tt=requests.get(f"https://api.rozklad.org.ua/v2/groups/{mess['group']}/lessons").json()
-# 		ntt=[i for i in tt["data"] if i["day_number"]==str(day) and i["lesson_week"]==str(week)]
-# 		if not ntt:
-# 			bot.send_message(message.chat.id, "Похоже, день свободен")
-# 		for i in ntt:
-# 			mes =i["lesson_number"]+" "+f"{i['time_start']}-{i['time_end']}\n"
-# 			mes+=i["lesson_name"]+"\n"+i["teacher_name"]+"\n"
-# 			mes+=i["lesson_type"]+" "+i["lesson_room"]
-# 			bot.send_message(message.chat.id, mes)
-# 	except Exception as e:
-# 		bot.send_message(message.chat.id, e)
-
+################################## Other ######################################
 @bot.message_handler(commands=["timetable"])
 def timetable(message):
 	try:
@@ -144,31 +118,9 @@ def timetable(message):
 				mes+=i["lesson_name"]+"\n"+i["teacher_name"]+" "
 				mes+=i["lesson_type"]+" "+i["lesson_room"]
 				if i["teachers"]: mes+=" R:"+i["teachers"][0]["teacher_rating"]
-				# try: mes+=" R:"+i["teachers"][0]["teacher_rating"]
-				# except: pass
 				bot.send_message(message.chat.id, mes)
 	except Exception as e:
 		bot.send_message(message.chat.id, e)
-	# try:
-	# 	api_link="https://api.rozklad.org.ua/v2/"
-	# 	mess=parse2(message.text, mess=1, key=1, group=1)
-	# 	day=datetime.datetime.now().isoweekday()
-	# 	if day>6: day=1
-	# 	week=requests.get(api_link+"weeks").json()["data"]
-	# 	tt=requests.get(api_link+f"groups/{mess['group']}/lessons").json()
-	# 	key={"d":[[day],[week]], "t":[[day+1],[week]], "w":[range(1,7),[week]], "f":[range(1,7),range(1,3)]}
-	# 	ntt=[i for i in tt["data"] if int(i["day_number"]) in key[mess["key"]][0] and int(i["lesson_week"]) in key[mess["key"]][1] ]
-	# 	if not ntt:
-	# 		bot.send_message(message.chat.id, "Похоже, день свободен")
-	# 	for i in ntt:
-	# 		mes =i["lesson_number"]+" "+f"{i['time_start']}-{i['time_end']}\n"
-	# 		mes+=i["lesson_name"]+"\n"+i["teacher_name"]+"\n"
-	# 		mes+=i["lesson_type"]+" "+i["lesson_room"]
-	# except Exception as e:
-	# 	bot.send_message(message.chat.id, e)
-
-# TODO Ключи по умолчанию.
-# TODO переводчика добавить
 
 @bot.message_handler(commands=["trans"])
 def trans(message):
