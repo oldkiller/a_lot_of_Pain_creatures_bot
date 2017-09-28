@@ -77,7 +77,7 @@ def forecast(message):
 		# else:
 		# 	for i in res:
 		# 		bot.send_message(message.chat.id, i["dt_txt"]+" : "+weath_reply(i))
-	except Exception as e:
+	except Except as e:
 		bot.send_message(message.chat.id, e)
 
 ####################### Block responsible for pictures ########################
