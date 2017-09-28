@@ -52,9 +52,9 @@ def weath_reply(data, mess=""):
 @bot.message_handler(commands=["weather"])
 def weather(message):
 	try:
-		pm=PWR(message.text)
+		txt=PWR(message.text)
 		if not txt: Except("Неполное тело запроса")
-		data=weath_req("weather", pm.freq())
+		data=weath_req("weather", txt.freq())
 		bot.send_message(message.chat.id,weath_reply(data))
 	except Exception as e:
 		bot.send_message(message.chat.id, e)
