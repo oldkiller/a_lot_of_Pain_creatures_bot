@@ -11,16 +11,18 @@ class Except(BaseException):
 # Захреначить все на регулярках, что ли?
 # Спасибо RegEx, что прокачали мой код.
 class PWR():
-	def __init__(self,txt):
+	def __init__(self,txtb,sep="$"):
+		txt=txtb.split(sep)[0]
 		txt=txt.split()[1:]
-		bd=dict(key=r"^[a-z]{1,2}$", req=r"^([^0-9])([A-Za-z\-0-9]){2,}$", num=r"^([^A-Za-z])([0-9]){0,}$")
+		# bd=dict(key=r"^[a-z]{1,2}$", req=r"^([^0-9])([A-Za-z\-0-9]){2,}$", num=r"^([^A-Za-z])([0-9]){0,}$")
+		bd=dict(key=r"^([^\d])([\w]){1}$", req=r"^([^\d])([\w\-]){2,}$", num=r"^([^A-Za-z])([0-9]){0,}$")
 		rd={i:[] for i in bd}
+		if sep in txtb:
+			rd[req].append(txtb[1:].split(sep)[1])
 		for i in bd:
 			for j in txt:
 				if re.search(bd[i],j):
 					rd[i].append(j)
-		# if not rd["req"]:
-		# 	Except("Пустое тело запроса.")
 		self.rd=rd
 
 	def __repr__(self):

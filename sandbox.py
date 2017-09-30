@@ -13,7 +13,10 @@ bot = telebot.TeleBot("317266897:AAGxt_oKV19_LG_S-xbcTH26eb8ZDGD06Fs")
 class PWR():
 	def __init__(self,txt):
 		txt=txt.split()[1:]
-		bd=dict(key=r"^[a-z]{1,2}$", req=r"^([^0-9])([A-Za-z\-0-9]){2,}$", num=r"^([^A-Za-z])([0-9]){0,}$")
+		# bd=dict(key=r"^[[:alpha:]]{,2}$", req=r"^([^\d])([\w\-]){2,}$", num=r"^([^[:alpha:]])([\d])$")
+		# bd=dict(key=r"^[[:alpha:]]{,2}$", req=r"^(^[\d])([\w\-]){2,}$", num=r"^(^[\w\-])([\d]+)$")
+		# bd=dict(key=r"^[[:alpha:]]{1,2}$", req=r"^([^0-9])([\w\-]){2,}$", num=r"^([^A-Za-z])([0-9]){0,}$")
+		bd=dict(key=r"^([^\d])([\w]){1}$", req=r"^([^\d])([\w\-]){2,}$", num=r"^([^A-Za-z])([0-9]){0,}$")
 		rd={i:[] for i in bd}
 		for i in bd:
 			for j in txt:

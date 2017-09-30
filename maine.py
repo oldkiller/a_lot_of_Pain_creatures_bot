@@ -125,7 +125,8 @@ def timetable(message):
 @bot.message_handler(commands=["trans"])
 def trans(message):
 	try:
-		pm=PWR(message.text)
+		#TODO Слова в тексте, которые состоят из 1-ной буквы
+		pm=PWR(message.text,sep="/")
 		text=" ".join(pm.req())
 		lang="-".join(pm.key())
 		api_link="https://translate.yandex.net/api/v1.5/tr.json/translate"
@@ -133,7 +134,15 @@ def trans(message):
 		bot.send_message(message.chat.id, req["text"] ) 
 	except Exception as e:
 		bot.send_message(message.chat.id, e) 
-
+@bot.message_handler(commands=["test"])
+def test(message):
+	try:
+		pm=PWR(message.text,sep="/")
+		lang="-".join(pm.key())
+		text=" ".join(pm.req())
+		bot.send_message(message.chat.id, text+" ||| "+lang)
+	except Exception as e:
+		raise e
 ####################### Block responsible for webhooks ########################
 server = Flask(__name__)
 
