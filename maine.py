@@ -22,14 +22,14 @@ def start(message):
 @bot.message_handler(commands=["help"])
 def helps(message):
 	help_mess="""
+	Все ключи начинаются с минуса (-)
 	/weather <city> - Узнать погоду в <city>
 	/forecast <key> <city> - Узнать прогноз погоды в <city>, 
-	<key> - может принимать значения -s,-m,-l
+	<key> - может принимать значения s,m,l
 	/yandere <tag> <count> - Поиск изображений на yande.re, 
 	<tag> - теги для поиска, <count> - количество
 	/timetable <key> <group> - <group> - група, для которой берется рассписание
-	Ключи для рассписания: {d - day, t - tomorow, w - week, f - full}
-	help is coming
+	Ключи для рассписания: {d - day, t - tomorrow, w - week, f - full}
 	"""
 	bot.send_message(message.chat.id, help_mess)
 
@@ -92,7 +92,7 @@ def yandere(message):
 	except Exception as e:
 		bot.send_message(message.chat.id, e)
 
-################################### DB ########################################
+###############################################################################
 #On next episode...
 
 ###############################################################################
