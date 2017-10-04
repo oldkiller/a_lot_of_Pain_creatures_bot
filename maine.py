@@ -24,7 +24,7 @@ def helps(message):
 	help_mess="""
 	/weather <city> - Узнать погоду в <city>
 	/forecast <key> <city> - Узнать прогноз погоды в <city>, 
-	<key> - может принимать значения s,m,l
+	<key> - может принимать значения -s,-m,-l
 	/yandere <tag> <count> - Поиск изображений на yande.re, 
 	<tag> - теги для поиска, <count> - количество
 	/timetable <key> <group> - <group> - група, для которой берется рассписание
@@ -33,7 +33,7 @@ def helps(message):
 	"""
 	bot.send_message(message.chat.id, help_mess)
 
-################## Block responsible for weather requests #####################
+###############################################################################
 def weath_req(types,city):
 	req=f"http://api.openweathermap.org/data/2.5/{types}"
 	param={"q":city,"units":"metric","lang":"ru","APPID":weath_token}
@@ -73,7 +73,7 @@ def forecast(message):
 	except Exception as e:
 		bot.send_message(message.chat.id, e)
 
-####################### Block responsible for pictures ########################
+###############################################################################
 @bot.message_handler(commands=["yandere"])
 def yandere(message):
 	try:
@@ -119,21 +119,23 @@ def timetable(message):
 				if i["teachers"]: mes+=" R:"+i["teachers"][0]["teacher_rating"]
 				bot.send_message(message.chat.id, mes)
 	except Exception as e:
-		bot.send_message(message.chat.id, str(e))
+		bot.send_message(message.chat.id, e)
 
 @bot.message_handler(commands=["trans"])
 def trans(message):
 	try:
 		pm=ParseMessage(message.text)
 		text=" ".join(pm.req())
-		lang="-".join(pm.key())
+		lang="-".join(pm.key("ru"))
+		print(text,lang,pm,sep="\n")
 		api_link="https://translate.yandex.net/api/v1.5/tr.json/translate"
 		req=requests.get(api_link,params=dict(lang=lang,text=text,key=translate)).json()
+		print(req)
 		bot.send_message(message.chat.id, req["text"] ) 
 	except Exception as e:
 		bot.send_message(message.chat.id, e)
 
-####################### Block responsible for webhooks ########################
+################################## Webhooks ###################################
 server = Flask(__name__)
 
 @server.route("/bot", methods=['POST'])
