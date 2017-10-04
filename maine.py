@@ -127,10 +127,11 @@ def trans(message):
 		pm=ParseMessage(message.text)
 		text=" ".join(pm.req())
 		lang="-".join(pm.key("ru"))
-		print(text,lang,pm,sep="\n")
 		api_link="https://translate.yandex.net/api/v1.5/tr.json/translate"
 		req=requests.get(api_link,params=dict(lang=lang,text=text,key=translate)).json()
-		print(req)
+		if req["code"]!=200:
+			bot.send_message(message.chat.id, req["message"])
+			return
 		bot.send_message(message.chat.id, req["text"] ) 
 	except Exception as e:
 		bot.send_message(message.chat.id, e)
