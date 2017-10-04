@@ -105,7 +105,7 @@ def timetable(message):
 		week=requests.get(api_link+"weeks").json()["data"]
 		pm=ParseMessage(message.text)
 		tt=requests.get(api_link+f"groups/{pm.freq()}/lessons").json()
-		if tt["status_code"]==404: raise Except(tt["message"])
+		if tt["statusCode"]==404: raise Except(tt["message"])
 		key={"d":[[day],[week]], "t":[[day+1],[week]], "w":[range(1,7),[week]], "f":[range(1,7),[1,2]]}
 		for k in pm.key():
 			dn,lw="day_number","lesson_week"
