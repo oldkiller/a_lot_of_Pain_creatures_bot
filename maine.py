@@ -4,9 +4,9 @@ import telebot
 import pybooru
 import os
 from datetime import datetime,timezone,timedelta
-from common_func import *
 from urllib.request import urlopen
 from flask import Flask, request
+from ParseMessage import *
 
 tele_api = "426351504:AAHomR1jc-m2B7iabRnOFR8OkPTKlkWMIdw"
 weath_token = "795819f679706a61cd7938b26ac247af"
@@ -37,8 +37,7 @@ def helps(message):
 def weath_req(types,city):
 	req=f"http://api.openweathermap.org/data/2.5/{types}"
 	param={"q":city,"units":"metric","lang":"ru","APPID":weath_token}
-	data=requests.get(req, params=param).json()
-	return data
+	return requests.get(req, params=param).json()
 
 def weath_reply(data, mess=""):
 	tostr = lambda i: "{0:+3.0f}".format(i)
@@ -52,7 +51,7 @@ def weath_reply(data, mess=""):
 @bot.message_handler(commands=["weather"])
 def weather(message):
 	try:
-		txt=PWR(message.text)
+		txt=ParseMessage(message.text)
 		if not txt: Except("Неполное тело запроса")
 		data=weath_req("weather", txt.freq())
 		bot.send_message(message.chat.id,weath_reply(data))
@@ -62,7 +61,7 @@ def weather(message):
 @bot.message_handler(commands=["forecast"])
 def forecast(message):
 	try:
-		txt=PWR(message.text)
+		txt=ParseMessage(message.text)
 		if not txt: Except("Неполное тело запроса")
 		data=weath_req("forecast", txt.freq())
 		tlist=["00","03","06","09","12","15","18","21"]
@@ -78,7 +77,7 @@ def forecast(message):
 @bot.message_handler(commands=["yandere"])
 def yandere(message):
 	try:
-		mess=PWR(message.text)
+		mess=ParseMessage(message.text)
 		if not mess: raise Except("Неполное тело запроса")
 		booru=pybooru.Moebooru("yandere", hash_string=yan_api)
 		posts=booru.post_list(tags="_".join(mess.req()), limit=mess.fnum())
@@ -96,7 +95,7 @@ def yandere(message):
 ################################### DB ########################################
 #On next episode...
 
-################################## Other ######################################
+###############################################################################
 @bot.message_handler(commands=["timetable"])
 def timetable(message):
 	try:
@@ -104,7 +103,7 @@ def timetable(message):
 		day=datetime.now(timezone(timedelta(hours=3))).isoweekday()
 		if day>6: day=1
 		week=requests.get(api_link+"weeks").json()["data"]
-		pm=PWR(message.text)
+		pm=ParseMessage(message.text)
 		tt=requests.get(api_link+f"groups/{pm.freq()}/lessons").json()
 		key={"d":[[day],[week]], "t":[[day+1],[week]], "w":[range(1,7),[week]], "f":[range(1,7),[1,2]]}
 		for k in pm.key():
@@ -125,24 +124,15 @@ def timetable(message):
 @bot.message_handler(commands=["trans"])
 def trans(message):
 	try:
-		#TODO Слова в тексте, которые состоят из 1-ной буквы
-		pm=PWR(message.text,sep="/")
+		pm=ParseMessage(message.text)
 		text=" ".join(pm.req())
 		lang="-".join(pm.key())
 		api_link="https://translate.yandex.net/api/v1.5/tr.json/translate"
 		req=requests.get(api_link,params=dict(lang=lang,text=text,key=translate)).json()
 		bot.send_message(message.chat.id, req["text"] ) 
 	except Exception as e:
-		bot.send_message(message.chat.id, e) 
-@bot.message_handler(commands=["test"])
-def test(message):
-	try:
-		pm=PWR(message.text,sep="/")
-		lang="-".join(pm.key())
-		text=" ".join(pm.req())
-		bot.send_message(message.chat.id, text+" ||| "+lang)
-	except Exception as e:
-		raise e
+		bot.send_message(message.chat.id, e)
+
 ####################### Block responsible for webhooks ########################
 server = Flask(__name__)
 
