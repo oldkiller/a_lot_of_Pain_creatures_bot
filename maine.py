@@ -119,7 +119,7 @@ def timetable(message):
 				if i["teachers"]: mes+=" R:"+i["teachers"][0]["teacher_rating"]
 				bot.send_message(message.chat.id, mes)
 	except Exception as e:
-		bot.send_message(message.chat.id, e)
+		bot.send_message(message.chat.id, str(e))
 
 @bot.message_handler(commands=["trans"])
 def trans(message):
