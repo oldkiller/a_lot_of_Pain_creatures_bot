@@ -126,6 +126,11 @@ def timetable(message):
 def trans(message):
 	try:
 		pm=ParseMessage(message.text)
+		if "help" in pm.key():
+			api_link="https://translate.yandex.net/api/v1.5/tr.json/getLangs"
+			req=requests.get(api_link, params=dict(ui="ru",key=translate)).json()
+			bot.send_message(message.chat.id, req["langs"])
+			return
 		text=" ".join(pm.req())
 		lang="-".join(pm.key("ru"))
 		api_link="https://translate.yandex.net/api/v1.5/tr.json/translate"

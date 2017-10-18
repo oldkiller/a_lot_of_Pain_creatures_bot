@@ -1,10 +1,80 @@
 import requests
 import telebot
-import re
-from ParseMessage import *
+# from ParseMessage import *
 from datetime import datetime,timezone,timedelta
 
 bot = telebot.TeleBot("317266897:AAGxt_oKV19_LG_S-xbcTH26eb8ZDGD06Fs")
+
+class Except(BaseException):
+	def __init__(self, arg):
+		self.mess = arg
+	def __repr__(self):
+		return self.mess
+	def __str__(self):
+		return self.mess
+
+class ParseMessage():
+	def __init__(self,text):
+		text=text.split()
+		self.res=dict(com=[],key=[],req=[],num=[])
+		self.res["com"].append(text[0][1:])
+		for i in text[1:]:
+			if i[0]=="-":
+				self.res["key"].append(i[1:])
+			elif i.isnumeric():
+				self.res["num"].append(int(i))
+			else:
+				self.res["req"].append(i)
+
+	def __repr__(self):
+		return str(self.res)
+
+	def __str__(self):
+		return str(self.res)
+
+	def __bool__(self):
+		return bool(self.res["key"] or self.res["req"] or self.res["num"])
+
+	def com(self,default):
+		return self.res["com"] if self.res["com"] else default
+
+	def key(self,default=None):
+		return self.res["key"] if self.res["key"] else [default]
+
+	def req(self,default=None):
+		return self.res["req"] if self.res["req"] else [default]
+
+	def num(self,default=None):
+		return self.res["num"] if self.res["num"] else [default]
+	
+	def fkey(self,default=None):
+		return self.res["key"][0] if self.res["key"] else default
+
+	def freq(self,default=None):
+		return self.res["req"][0] if self.res["req"] else default
+
+	def fnum(self,default=None):
+		return self.res["num"][0] if self.res["num"] else default
+
+
+
+@bot.message_handler(commands=["rex"])
+def rex(message):
+	pm=ParseMessage(message.text)
+	bot.send_message(message.chat.id, "key")
+	if pm.key():
+		bot.send_message(message.chat.id, str(pm.key()))
+	bot.send_message(message.chat.id, "num")
+	if pm.num():
+		bot.send_message(message.chat.id, str(pm.num()))
+	bot.send_message(message.chat.id, "req")
+	if pm.req():
+		bot.send_message(message.chat.id, str(pm.req()))
+
+
+if __name__=="__main__":
+	bot.polling(none_stop=True)
+
 
 # KEYS=r"^[a-z]{1}$"
 # NUMS=r"^([^A-Za-z])([0-9]){0,}$"
@@ -111,24 +181,6 @@ bot = telebot.TeleBot("317266897:AAGxt_oKV19_LG_S-xbcTH26eb8ZDGD06Fs")
 # 	# lang="-".join(pm.key())
 # 	# text=" ".join(pm.req())
 # 	# bot.send_message(message.chat.id, text+" ||| "+lang)
-
-@bot.message_handler(commands=["rex"])
-def rex(message):
-	pm=ParseMessage(message.text)
-	# bot.send_message(message.chat.id, bool(pm))
-	bot.send_message(message.chat.id, "key")
-	if pm.key():
-		bot.send_message(message.chat.id, str(pm.key()))
-	bot.send_message(message.chat.id, "num")
-	if pm.num():
-		bot.send_message(message.chat.id, str(pm.num()))
-	bot.send_message(message.chat.id, "req")
-	if pm.req():
-		bot.send_message(message.chat.id, str(pm.req()))
-
-
-if __name__=="__main__":
-	bot.polling(none_stop=True)
 
 # def parse(p_str, base_dict, sep="_"):
 # 	try:
