@@ -14,7 +14,7 @@ yan_api = "r5oUMfysc4C566kI312u_A"
 translate = "trnsl.1.1.20170926T012014Z.3f5cb4c22d376499.4dc04c7f837aa68cb2ca57420651ba47d1548711"
 
 bot = telebot.TeleBot(tele_api)
-raise
+
 @bot.message_handler(commands=["start"])
 def start(message):
 	bot.reply_to(message, 'Hello, ' + message.from_user.first_name)
