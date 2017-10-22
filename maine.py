@@ -141,7 +141,6 @@ def trans(message):
 		bot.send_message(message.chat.id, req["text"] ) 
 	except Exception as e:
 		bot.send_message(message.chat.id, e)
-Except
 ################################## Webhooks ###################################
 server = Flask(__name__)
 
