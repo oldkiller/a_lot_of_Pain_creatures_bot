@@ -52,7 +52,7 @@ def weath_reply(data, mess=""):
 def weather(message):
 	try:
 		txt=ParseMessage(message.text)
-		if not txt: ValueError("Неполное тело запроса")
+		if not txt.req(): ValueError("Неполное тело запроса")
 		data=weath_req("weather", txt.freq())
 		bot.send_message(message.chat.id,weath_reply(data))
 	except Exception as e:
@@ -62,7 +62,7 @@ def weather(message):
 def forecast(message):
 	try:
 		txt=ParseMessage(message.text)
-		if not txt: ValueError("Неполное тело запроса")
+		if not txt.req(): ValueError("Неполное тело запроса")
 		data=weath_req("forecast", txt.freq())
 		tlist=["00","03","06","09","12","15","18","21"]
 		tkey={"s":4, "m":2, "l":1}
@@ -131,6 +131,7 @@ def trans(message):
 			req=requests.get(api_link, params=dict(ui="ru",key=translate)).json()
 			bot.send_message(message.chat.id, str(req["langs"]))
 			return
+		if not pm.req(): ValueError("Неполное тело запроса")
 		text=" ".join(pm.req())
 		lang="-".join(pm.key("ru"))
 		api_link="https://translate.yandex.net/api/v1.5/tr.json/translate"

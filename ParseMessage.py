@@ -1,16 +1,16 @@
 class ParseMessage():
 	def __init__(self,text):
 		text=text.split()
-		self.res=dict(com=[],key=[],req=[],num=[])
-		self.res["com"].append(text[0][1:])
+		self.res=dict(com="",key=[],req=[],num=[])
+		self.res["com"]=text[0][1:]
 		for i in text[1:]:
-			if i[0]=="-":
+			if i[0]=="-" and len(i)>1:
 				self.res["key"].append(i[1:])
 			elif i.isnumeric():
 				self.res["num"].append(int(i))
 			else:
 				self.res["req"].append(i)
-
+	#TODO flags, ex. whose starting at ":"
 	def __repr__(self):
 		return str(self.res)
 
