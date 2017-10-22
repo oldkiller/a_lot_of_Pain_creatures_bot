@@ -1,4 +1,4 @@
-import postgresql
+#import postgresql
 import requests
 import telebot
 import pybooru
@@ -14,7 +14,7 @@ yan_api = "r5oUMfysc4C566kI312u_A"
 translate = "trnsl.1.1.20170926T012014Z.3f5cb4c22d376499.4dc04c7f837aa68cb2ca57420651ba47d1548711"
 
 bot = telebot.TeleBot(tele_api)
-
+raise
 @bot.message_handler(commands=["start"])
 def start(message):
 	bot.reply_to(message, 'Hello, ' + message.from_user.first_name)
@@ -52,7 +52,7 @@ def weath_reply(data, mess=""):
 def weather(message):
 	try:
 		txt=ParseMessage(message.text)
-		if not txt: Except("Неполное тело запроса")
+		if not txt: ValueError("Неполное тело запроса")
 		data=weath_req("weather", txt.freq())
 		bot.send_message(message.chat.id,weath_reply(data))
 	except Exception as e:
@@ -62,7 +62,7 @@ def weather(message):
 def forecast(message):
 	try:
 		txt=ParseMessage(message.text)
-		if not txt: Except("Неполное тело запроса")
+		if not txt: ValueError("Неполное тело запроса")
 		data=weath_req("forecast", txt.freq())
 		tlist=["00","03","06","09","12","15","18","21"]
 		tkey={"s":4, "m":2, "l":1}
@@ -78,10 +78,10 @@ def forecast(message):
 def yandere(message):
 	try:
 		mess=ParseMessage(message.text)
-		if not mess: raise Except("Неполное тело запроса")
+		if not mess: raise ValueError("Неполное тело запроса")
 		booru=pybooru.Moebooru("yandere", hash_string=yan_api)
 		posts=booru.post_list(tags="_".join(mess.req()), limit=mess.fnum())
-		if not posts: raise Except("Пост(ы) не найден(ы).")
+		if not posts: raise ValueError("Пост(ы) не найден(ы).")
 		for post in posts:
 			bot.send_photo(message.chat.id, urlopen(post["sample_url"]))
 			name_file=post["file_url"].split("/")[-1].replace("%20", "_")
@@ -105,7 +105,7 @@ def timetable(message):
 		week=requests.get(api_link+"weeks").json()["data"]
 		pm=ParseMessage(message.text)
 		tt=requests.get(api_link+f"groups/{pm.freq()}/lessons").json()
-		if tt["statusCode"]==404: raise Except(tt["message"])
+		if tt["statusCode"]==404: raise ValueError(tt["message"])
 		key={"d":[[day],[week]], "t":[[day+1],[week]], "w":[range(1,7),[week]], "f":[range(1,7),[1,2]]}
 		for k in pm.key():
 			dn,lw="day_number","lesson_week"
@@ -141,7 +141,7 @@ def trans(message):
 		bot.send_message(message.chat.id, req["text"] ) 
 	except Exception as e:
 		bot.send_message(message.chat.id, e)
-
+Except
 ################################## Webhooks ###################################
 server = Flask(__name__)
 

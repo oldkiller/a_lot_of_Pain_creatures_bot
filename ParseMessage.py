@@ -1,11 +1,3 @@
-class Except(BaseException):
-	def __init__(self, arg):
-		self.mess = arg
-	def __repr__(self):
-		return self.mess
-	def __str__(self):
-		return self.mess
-
 class ParseMessage():
 	def __init__(self,text):
 		text=text.split()
