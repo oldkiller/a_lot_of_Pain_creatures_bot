@@ -21,16 +21,16 @@ def start(message):
 
 @bot.message_handler(commands=["help"])
 def helps(message):
-	help_mess="""
-	Все ключи начинаются с минуса (-)
-	/weather <city> - Узнать погоду в <city>
-	/forecast <key> <city> - Узнать прогноз погоды в <city>, 
-	<key> - может принимать значения s,m,l
-	/yandere <tag> <count> - Поиск изображений на yande.re, 
-	<tag> - теги для поиска, <count> - количество
-	/timetable <key> <group> - <group> - група, для которой берется рассписание
-	Ключи для рассписания: {d - day, t - tomorrow, w - week, f - full}
-	"""
+	help_mess="Все ключи начинаются с минуса (-)"\
+	"/weather <city> - Узнать погоду в <city>\n"\
+	"/forecast <key> <city> - Узнать прогноз погоды в <city>, "\
+	"<key> - может принимать значения s,m,l\n"\
+	"/yandere <tag> <count> - Поиск изображений на yande.re, "\
+	"<tag> - теги для поиска, <count> - количество\n"\
+	"/konachan <tag> <count> - Поиск изображений на konachan.com, "\
+	"<tag> - теги для поиска, <count> - количество\n"\
+	"/timetable <key> <group> - <group> - група, для которой берется рассписание"\
+	"Ключи для рассписания: {d - day, t - tomorrow, w - week, f - full}"
 	bot.send_message(message.chat.id, help_mess)
 
 ###############################################################################
@@ -74,13 +74,13 @@ def forecast(message):
 		bot.send_message(message.chat.id, e)
 
 ###############################################################################
-@bot.message_handler(commands=["yandere"])
+@bot.message_handler(commands=["yandere","konachan"])
 def yandere(message):
 	try:
 		mess=ParseMessage(message.text)
 		if not mess: raise ValueError("Неполное тело запроса")
 		booru=pybooru.Moebooru("yandere", hash_string=yan_api)
-		posts=booru.post_list(tags="_".join(mess.req()), limit=mess.fnum())
+		posts=booru.post_list(tags="+".join(mess.req()), limit=mess.fnum())
 		if not posts: raise ValueError("Пост(ы) не найден(ы).")
 		for post in posts:
 			bot.send_photo(message.chat.id, urlopen(post["sample_url"]))
