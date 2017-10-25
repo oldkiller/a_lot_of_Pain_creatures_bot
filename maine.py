@@ -83,10 +83,10 @@ def yandere(message):
 		posts=booru.post_list(tags="+".join(mess.req()), limit=mess.fnum())
 		if not posts: raise ValueError("Пост(ы) не найден(ы).")
 		for post in posts:
-			bot.send_photo(message.chat.id, urlopen(post["sample_url"].split("//")[1]))
+			bot.send_photo(message.chat.id, urlopen("https://"+post["sample_url"].split("//")[1]))
 			name_file=post["file_url"].split("/")[-1].replace("%20", "_")
 			with open(name_file,"wb") as pic:
-				pic.write(requests.get(post["file_url"].split("//")[1]).content)
+				pic.write(requests.get("https://"+post["file_url"].split("//")[1]).content)
 			with open(name_file,"rb") as pic:
 				bot.send_document(message.chat.id, pic)
 	except Exception as e:
