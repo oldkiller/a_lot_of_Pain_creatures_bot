@@ -20,7 +20,7 @@ class ParseMessage():
 	def __bool__(self):
 		return bool(self.res["key"] or self.res["req"] or self.res["num"])
 
-	def com(self,default):
+	def com(self,default=None):
 		return self.res["com"] if self.res["com"] else default
 
 	def key(self,default=None):
