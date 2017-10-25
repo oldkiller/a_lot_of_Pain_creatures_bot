@@ -79,7 +79,7 @@ def yandere(message):
 	try:
 		mess=ParseMessage(message.text)
 		if not mess: raise ValueError("Неполное тело запроса")
-		booru=pybooru.Moebooru("yandere", hash_string=yan_api)
+		booru=pybooru.Moebooru(mess.com())
 		posts=booru.post_list(tags="+".join(mess.req()), limit=mess.fnum())
 		if not posts: raise ValueError("Пост(ы) не найден(ы).")
 		for post in posts:
