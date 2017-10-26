@@ -80,7 +80,7 @@ def yandere(message):
 		mess=ParseMessage(message.text)
 		if not mess: raise ValueError("Неполное тело запроса")
 		booru=pybooru.Moebooru(mess.com())
-		posts=booru.post_list(tags="+".join(mess.req()), limit=mess.fnum(5))
+		posts=booru.post_list(tags=" ".join(mess.req()), limit=mess.fnum(5))
 		if not posts: raise ValueError("Пост(ы) не найден(ы).")
 		for post in posts:
 			bot.send_photo(message.chat.id, urlopen("https://"+post["sample_url"].split("//")[1]))
