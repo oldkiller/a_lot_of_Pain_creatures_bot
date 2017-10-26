@@ -80,15 +80,16 @@ def yandere(message):
 		mess=ParseMessage(message.text)
 		if not mess: raise ValueError("Неполное тело запроса")
 		booru=pybooru.Moebooru(mess.com())
-		posts=booru.post_list(tags="+".join(mess.req()), limit=mess.fnum())
+		posts=booru.post_list(tags="+".join(mess.req()), limit=mess.fnum(5))
 		if not posts: raise ValueError("Пост(ы) не найден(ы).")
 		for post in posts:
 			bot.send_photo(message.chat.id, urlopen("https://"+post["sample_url"].split("//")[1]))
-			name_file=post["file_url"].split("/")[-1].replace("%20", "_")
-			with open(name_file,"wb") as pic:
-				pic.write(requests.get("https://"+post["file_url"].split("//")[1]).content)
-			with open(name_file,"rb") as pic:
-				bot.send_document(message.chat.id, pic)
+			if "d" in mess.key():
+				name_file=post["file_url"].split("/")[-1].replace("%20", "_")
+				with open(name_file,"wb") as pic:
+					pic.write(requests.get("https://"+post["file_url"].split("//")[1]).content)
+				with open(name_file,"rb") as pic:
+					bot.send_document(message.chat.id, pic)
 	except Exception as e:
 		bot.send_message(message.chat.id, e)
 
