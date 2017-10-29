@@ -1,4 +1,3 @@
-#import postgresql
 import requests
 import telebot
 import pybooru
@@ -6,7 +5,8 @@ import os
 from datetime import datetime,timezone,timedelta
 from urllib.request import urlopen
 from flask import Flask, request
-from ParseMessage import *
+from ParseMessage import ParseMessage
+from Postgres import Postgress
 
 tele_api = "426351504:AAHomR1jc-m2B7iabRnOFR8OkPTKlkWMIdw"
 weath_token = "795819f679706a61cd7938b26ac247af"
@@ -14,6 +14,7 @@ yan_api = "r5oUMfysc4C566kI312u_A"
 translate = "trnsl.1.1.20170926T012014Z.3f5cb4c22d376499.4dc04c7f837aa68cb2ca57420651ba47d1548711"
 
 bot = telebot.TeleBot(tele_api)
+database=Postgress("postgres://lciehxdy:m2xMdBB_HMr_QrvwntIeGva5ngPcSNL7@dumbo.db.elephantsql.com:5432/lciehxdy")
 
 @bot.message_handler(commands=["start"])
 def start(message):
@@ -52,8 +53,14 @@ def weath_reply(data, mess=""):
 def weather(message):
 	try:
 		txt=ParseMessage(message.text)
-		if not txt.req(): raise ValueError("Неполное тело запроса")
-		data=weath_req("weather", txt.freq())
+		if not txt.req():
+			city=database.read(message.chat.id, "city")
+			if not city:
+				raise ValueError("Неполное тело запроса")
+		if "save" in txt("key") and txt("req"):
+			city=txt("req")[0]
+			database.write(message.chat.id, "city",city)
+		data=weath_req("weather", city)
 		bot.send_message(message.chat.id,weath_reply(data))
 	except Exception as e:
 		bot.send_message(message.chat.id, e)

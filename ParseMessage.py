@@ -10,12 +10,18 @@ class ParseMessage():
 				self.res["num"].append(int(i))
 			else:
 				self.res["req"].append(i)
-	#TODO flags, ex. whose starting at ":"
+	#TODO flags, ex. words, whose starting at ":"
 	def __repr__(self):
 		return str(self.res)
 
 	def __str__(self):
 		return str(self.res)
+
+	def __call__(self,types,d=None,c=None):
+		res=self.res["com"] if self.res["com"] else d
+		if c:
+			res=res[:c]
+		return res
 
 	def __bool__(self):
 		return bool(self.res["key"] or self.res["req"] or self.res["num"])
