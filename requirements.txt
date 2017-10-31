@@ -1,5 +1,6 @@
 flask
 Pybooru
+psycopg2
 requests
 py-postgresql
 pytelegrambotapi
