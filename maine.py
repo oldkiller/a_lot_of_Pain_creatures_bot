@@ -23,7 +23,7 @@ def start(message):
 
 @bot.message_handler(commands=["help"])
 def helps(message):
-	help_mess="Все ключи начинаются с минуса (-)"\
+	help_mess="Все ключи начинаются с минуса (-)\n"\
 	"/weather <city> - Узнать погоду в <city>\n"\
 	"/forecast <key> <city> - Узнать прогноз погоды в <city>, "\
 	"<key> - может принимать значения s,m,l\n"\
@@ -58,9 +58,10 @@ def weather(message):
 			city=database.read(message.chat.id, "city")
 			if not city:
 				raise ValueError("Неполное тело запроса")
-		if "save" in txt("key") and txt("req"):
+		if txt("req"):
 			city=txt("req")[0]
-			database.write(message.chat.id, "city",city)
+			if "save" in txt("key"):
+				database.write(message.chat.id, "city",city)
 		data=weath_req("weather", city)
 		bot.send_message(message.chat.id,weath_reply(data))
 	except Exception as e:
