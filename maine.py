@@ -54,7 +54,8 @@ def weath_reply(data, mess=""):
 def weather(message):
 	try:
 		txt=ParseMessage(message.text)
-		data=weath_req("weather", txt("req")[0])
+		if not txt.req(): raise ValueError("Неполное тело запроса")
+		data=weath_req("weather", txt.freq())
 		bot.send_message(message.chat.id,weath_reply(data))
 	except Exception as e:
 		bot.send_message(message.chat.id, e)
@@ -93,9 +94,6 @@ def yandere(message):
 					bot.send_document(message.chat.id, pic)
 	except Exception as e:
 		bot.send_message(message.chat.id, e)
-
-###############################################################################
-#On next episode...
 
 ###############################################################################
 @bot.message_handler(commands=["timetable"])
