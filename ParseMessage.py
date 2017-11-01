@@ -19,8 +19,9 @@ class ParseMessage():
 
 	def __call__(self,types,d=None,c=None):
 		res=self.res[types] if self.res[types] else [d]
-		if c==1: res=res[0]
-		if c>1: res=res[:c]
+		if c:
+			if c==1: res=res[0]
+			if c>1: res=res[:c]
 		return res
 
 	def __bool__(self):
