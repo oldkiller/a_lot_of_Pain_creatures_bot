@@ -54,15 +54,7 @@ def weath_reply(data, mess=""):
 def weather(message):
 	try:
 		txt=ParseMessage(message.text)
-		if not txt.req():
-			city=database.read(message.chat.id, "city")
-			if not city:
-				raise ValueError("Неполное тело запроса")
-		if txt("req"):
-			city=txt("req")[0]
-			if "save" in txt("key"):
-				database.write(message.chat.id, "city",city)
-		data=weath_req("weather", city)
+		data=weath_req("weather", txt("req")[0])
 		bot.send_message(message.chat.id,weath_reply(data))
 	except Exception as e:
 		bot.send_message(message.chat.id, e)
@@ -150,6 +142,24 @@ def trans(message):
 			bot.send_message(message.chat.id, req["message"])
 			return
 		bot.send_message(message.chat.id, req["text"] ) 
+	except Exception as e:
+		bot.send_message(message.chat.id, e)
+
+###############################################################################
+@bot.message_handler(commands=["beta"]) # testing new function 
+def beta(message):
+	try:
+		txt=ParseMessage(message.text)
+		if not txt.req():
+			city=database.read(message.chat.id, "city")
+			if not city:
+				raise ValueError("Неполное тело запроса")
+		if txt("req"):
+			city=txt("req")[0]
+			if "save" in txt("key"):
+				database.write(message.chat.id, "city",city)
+		data=weath_req("weather", city)
+		bot.send_message(message.chat.id,weath_reply(data))
 	except Exception as e:
 		bot.send_message(message.chat.id, e)
 ################################## Webhooks ###################################
