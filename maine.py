@@ -1,3 +1,4 @@
+import traceback
 import requests
 import telebot
 import pybooru
@@ -8,12 +9,14 @@ from flask import Flask, request
 from ParseMessage import ParseMessage
 from Postgres import Postgress
 
-tele_api="426351504:AAHomR1jc-m2B7iabRnOFR8OkPTKlkWMIdw"
-weath_token="795819f679706a61cd7938b26ac247af"
-yan_api="r5oUMfysc4C566kI312u_A"
-translate="trnsl.1.1.20170926T012014Z.3f5cb4c22d376499.4dc04c7f837aa68cb2ca57420651ba47d1548711"
-db_address="postgres://lciehxdy:m2xMdBB_HMr_QrvwntIeGva5ngPcSNL7@dumbo.db.elephantsql.com:5432/lciehxdy"
+# tele_api="426351504:AAHomR1jc-m2B7iabRnOFR8OkPTKlkWMIdw"
+# weath_token="795819f679706a61cd7938b26ac247af"
+# yan_api="r5oUMfysc4C566kI312u_A"
+# translate="trnsl.1.1.20170926T012014Z.3f5cb4c22d376499.4dc04c7f837aa68cb2ca57420651ba47d1548711"
+# db_address="postgres://lciehxdy:m2xMdBB_HMr_QrvwntIeGva5ngPcSNL7@dumbo.db.elephantsql.com:5432/lciehxdy"
 
+tele_api=os.environ['telegram_token']
+weath_token=os.environ['weather_token']
 bot = telebot.TeleBot(tele_api)
 database=Postgress(db_address)
 
